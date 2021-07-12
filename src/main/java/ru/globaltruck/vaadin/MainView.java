@@ -23,18 +23,16 @@ public class MainView extends VerticalLayout {
     public MainView(ExternalSystemRepository repo, ExternalSystemEditor editor) {
         this.systemRepository = repo;
         this.editor = editor;
+
         add(toolbar, grid, editor);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> listSystems(e.getValue()));
 
-        // Connect selected Customer to editor or hide if none is selected
         grid.asSingleSelect().addValueChangeListener(e -> editor.editExternalSystem(e.getValue()));
 
-        // Instantiate and edit new Customer the new button is clicked
         addNewBtn.addClickListener(e -> editor.editExternalSystem(new ExternalSystem()));
 
-        // Listen changes made by the editor, refresh data from backend
         editor.setChangeHandler(() -> {
             editor.setVisible(false);
             listSystems(filter.getValue());
@@ -44,17 +42,11 @@ public class MainView extends VerticalLayout {
     }
 
     private void listSystems(String filter) {
-        grid.setItems(systemRepository.findAll());
-
-        if (StringUtils.isEmpty(filter)) {
+        if (filter.isEmpty()) {
             grid.setItems(systemRepository.findAll());
-        }
-        else {
+        } else {
             grid.setItems(systemRepository.findByName(filter));
         }
 
     }
-
-
-
 }
