@@ -5,17 +5,23 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.selection.SingleSelect;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-import org.apache.commons.lang3.StringUtils;
 
 @Route
 public class MainView extends VerticalLayout {
     private final ExternalSystemRepository systemRepository;
+
     private final Grid<ExternalSystem> grid = new Grid<>(ExternalSystem.class);
 
+    // Окошко для фильтрации списка
     private final TextField filter = new TextField("", "Type to filter");
+
+    // Кнопка для добавления
     private final Button addNewBtn = new Button("Add new");
+
+    // Панель инструментов, где расположено окошко для фильтра и кнопка добавления новой записи
     private final HorizontalLayout toolbar = new HorizontalLayout(filter, addNewBtn);
 
     private final ExternalSystemEditor editor;
@@ -24,14 +30,19 @@ public class MainView extends VerticalLayout {
         this.systemRepository = repo;
         this.editor = editor;
 
+        // Добавляет дочерние компоненты
         add(toolbar, grid, editor);
 
+        // Позволяет искать сразу, когда начал печатать текст, без нажатия на Enter
         filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.addValueChangeListener(e -> listSystems(e.getValue()));
 
-        grid.asSingleSelect().addValueChangeListener(e -> editor.editExternalSystem(e.getValue()));
 
-        addNewBtn.addClickListener(e -> editor.editExternalSystem(new ExternalSystem()));
+        filter.addValueChangeListener(event -> listSystems(event.getValue()));
+
+        SingleSelect<Grid<ExternalSystem>, ExternalSystem> gridExternalSystemSingleSelect = grid.asSingleSelect();
+        gridExternalSystemSingleSelect.addValueChangeListener(event -> editor.editExternalSystem(event.getValue()));
+
+        addNewBtn.addClickListener(event -> editor.editExternalSystem(new ExternalSystem()));
 
         editor.setChangeHandler(() -> {
             editor.setVisible(false);
@@ -45,7 +56,7 @@ public class MainView extends VerticalLayout {
         if (filter.isEmpty()) {
             grid.setItems(systemRepository.findAll());
         } else {
-            grid.setItems(systemRepository.findByName(filter));
+            grid.setItems(systemRepository.findByNameStartsWith(filter));
         }
 
     }

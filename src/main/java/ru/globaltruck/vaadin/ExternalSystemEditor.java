@@ -19,11 +19,16 @@ public class ExternalSystemEditor extends VerticalLayout implements KeyNotifier 
 
     private ExternalSystem externalSystem;
 
+    // Окошко для ввода новой системы
     private TextField name = new TextField("Name");
 
+    // Кнопка сохранить внешнюю систему
     private Button save = new Button("Save", VaadinIcon.CHECK.create());
+    // Кнопка отменить хуй пойми что, не работает
     private Button cancel = new Button("Cancel");
+    // Кнопка удалить выбранную внешнюю систему
     private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
+    // Панель инструментов, где расположены кнопки: сохранить, отменить, удалить
     private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
 
     private Binder<ExternalSystem> binder = new Binder<>(ExternalSystem.class);

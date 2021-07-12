@@ -8,5 +8,5 @@ import java.util.UUID;
 
 interface ExternalSystemRepository extends JpaRepository<ExternalSystem, UUID> {
 
-    List<ExternalSystem> findByName(String name);
+    List<ExternalSystem> findByNameStartsWith(String name);
 }
