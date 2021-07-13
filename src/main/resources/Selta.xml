@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trnsrdr>
+    <id>b247f28d-5adc-4be0-a7f2-6c7cad610d44</id>
+    <companyDescription>
+        <opf>Общество с ограниченной ответственностью</opf>
+        <name>СЕЛЬТА</name>
+        <address>350072, г. Краснодар, ул. Солнечная 15/5</address>
+        <checkingAccount>40702810130020101590</checkingAccount>
+        <correspondentAccount>30101810100000000602</correspondentAccount>
+        <bankAddress>УЛ КРАСНОАРМЕЙСКАЯ, 34</bankAddress>
+        <inn>2310053662</inn>
+        <bik>040349602</bik>
+        <okpo>50456509</okpo>
+        <okonh>0</okonh>
+        <phone>7-861-210-98-10, доб.13290, 17235</phone>
+    </companyDescription>
+    <offerNumber>1377072-1377072-Тула-Воро</offerNumber>
+    <orderNumber>1377072</orderNumber>
+    <offerType>1</offerType>
+    <startDate>2021-07-12</startDate>
+    <startTime>16:03:31</startTime>
+    <customer>
+        <GLN>9864066898589</GLN>
+        <ID>9864066898589</ID>
+    </customer>
+    <shipper>
+        <GLN>9864232246909</GLN>
+        <ID>9864232246909</ID>
+    </shipper>
+    <routes>
+        <route>
+            <dateFrom>2021-07-13 08:00:00</dateFrom>
+            <dateTo>2021-07-13 20:33:00</dateTo>
+            <addressfrom>Тандер АО, 301138, Тульская обл, Ленинский р-н, Иншинский п, Поселок 12 лет Октября мкр, дом № 9</addressfrom>
+            <timing>0</timing>
+            <addressto>, 396311, Воронежская обл, Новоусманский р-н, , Нечаевка с, Виноградная ул, дом № 90а,</addressto>
+        </route>
+    </routes>
+    <cargo>
+        <name>Непрофиль</name>
+        <pallet>33</pallet>
+        <temperatureConditions>
+            <min>0</min>
+            <max>0</max>
+            <recommended/>
+            <mode/>
+        </temperatureConditions>
+        <unitOfMeasure>кг.</unitOfMeasure>
+        <loadingType>
+            <name>Задняя</name>
+        </loadingType>
+        <weight>13730</weight>
+    </cargo>
+    <rateInfo>
+        <currency>
+            <name>Российский рубль</name>
+            <shortName>руб.</shortName>
+        </currency>
+        <rate>28400</rate>
+        <taxRate>20</taxRate>
+        <AdditionalServices>0</AdditionalServices>
+    </rateInfo>
+    <carRequirements>
+        <mountingTools>true</mountingTools>
+        <truckType>
+            <name>Рефрижератор</name>
+        </truckType>
+        <requirementForEquipment>
+            <crossbarRequired value="false"/>
+            <beltsRequired value="false"/>
+            <fasteningDevicesRequired value="false"/>
+            <otherRequired value="false">
+                <text/>
+            </otherRequired>
+        </requirementForEquipment>
+    </carRequirements>
+    <specialConditions>Особые условия перевозки: Температура при перевозке должна соответствовать температуре, указанной в товаросопроводительной документации и/или заявке. Рефрижераторная установка должна работать в постоянном режиме. При отсутствии данных о температурном режиме, необходимо связаться с менеджером по  тел. 8-960-488-70-07 (круглосуточно) для уточнения информации, в противном случае Перевозчик несет полную ответственность за сохранность груза.
+        Штрафные санкции: Стороны особо оговорили: 1) За опоздание ТС более чем на 1 (один) час под погрузку/выгрузку  штраф в размере 3 000 руб. за факт опоздания, а также штраф в размере 3 000 руб. за каждые истекшие 24 часа опоздания.  2) За простой ТС на погрузке/выгрузке свыше 48 часов, Заказчик оплачивает Перевозчику штраф за каждые сутки сверх нормативного простоя: Тент, Термос - 1 000 руб.;  Рефрижератор - 1 500 руб.
+        В случае, если в заявке и сопроводительной документации указана разная температура транспортировки груза, Перевозчик руководствуется темературой, указанной в сопроводительной документации.</specialConditions>
+</trnsrdr>

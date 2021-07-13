@@ -1,63 +1,66 @@
 package ru.globaltruck.vaadin;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.selection.SingleSelect;
-import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.router.Route;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Route
 public class MainView extends VerticalLayout {
     private final ExternalSystemRepository systemRepository;
 
-    private final Grid<ExternalSystem> grid = new Grid<>(ExternalSystem.class);
+    private final Select<String> labelSelect = new Select<>();
+    private final Div value = new Div();
 
-    // Окошко для фильтрации списка
-    private final TextField filter = new TextField("", "Type to filter");
+    private final TreeGrid<String> treeGrid = new TreeGrid<>();
 
-    // Кнопка для добавления
-    private final Button addNewBtn = new Button("Add new");
-
-    // Панель инструментов, где расположено окошко для фильтра и кнопка добавления новой записи
-    private final HorizontalLayout toolbar = new HorizontalLayout(filter, addNewBtn);
-
-    private final ExternalSystemEditor editor;
-
-    public MainView(ExternalSystemRepository repo, ExternalSystemEditor editor) {
+    public MainView(ExternalSystemRepository repo) throws IOException {
         this.systemRepository = repo;
-        this.editor = editor;
+
+//        List<ExternalSystem> externalSystems = systemRepository.findAll();
+        XmlMapper xmlMapper = new XmlMapper();
+        JsonNode node = xmlMapper.readTree(Files.readAllBytes(Path.of("src/main/resources/Selta.xml")));
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String json = jsonMapper.writeValueAsString(node);
+
+        //наименование колонки дерева
+        treeGrid.addHierarchyColumn(s -> s).setHeader("изи bitch");
+        try {
+            //читаем json
+            JSONObject object = new JSONObject(json);
+            //заполнение дерева из произвольного json
+            List<String> rootItems = Arrays.asList(JSONObject.getNames(object));
+            treeGrid.setItems(rootItems, s -> {
+                if (object.has(s) && object.get(s) instanceof JSONObject) {
+                    JSONObject level1 = (JSONObject) object.get(s);
+                    return Arrays.asList(JSONObject.getNames(level1));
+                } else
+                    return Collections.emptyList();
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("гамно а не json");
+        }
+
+        labelSelect.setLabel("Внешняя система");
+
+        value.setText("Выберите внешнюю систему");
+        labelSelect.addValueChangeListener(
+                event -> value.setText("Выбрано: " + event.getValue()));
 
         // Добавляет дочерние компоненты
-        add(toolbar, grid, editor);
-
-        // Позволяет искать сразу, когда начал печатать текст, без нажатия на Enter
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
-
-
-        filter.addValueChangeListener(event -> listSystems(event.getValue()));
-
-        SingleSelect<Grid<ExternalSystem>, ExternalSystem> gridExternalSystemSingleSelect = grid.asSingleSelect();
-        gridExternalSystemSingleSelect.addValueChangeListener(event -> editor.editExternalSystem(event.getValue()));
-
-        addNewBtn.addClickListener(event -> editor.editExternalSystem(new ExternalSystem()));
-
-        editor.setChangeHandler(() -> {
-            editor.setVisible(false);
-            listSystems(filter.getValue());
-        });
-
-        listSystems("");
-    }
-
-    private void listSystems(String filter) {
-        if (filter.isEmpty()) {
-            grid.setItems(systemRepository.findAll());
-        } else {
-            grid.setItems(systemRepository.findByNameStartsWith(filter));
-        }
+        add(labelSelect, value, treeGrid);
 
     }
 }
