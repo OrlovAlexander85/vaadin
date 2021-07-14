@@ -1,34 +1,30 @@
 package ru.globaltruck.vaadin;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
+import org.json.XML;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class NodeData {
 
 
-    private static final List<Node> NODE_LIST = createDepartmentList();
+    public static final List<Node> NODE_LIST = createNodeList();
 
     @SneakyThrows
-    private static List<Node> createDepartmentList() {
+    private static List<Node> createNodeList() {
         List<Node> nodeList = new ArrayList<>();
 
-        XmlMapper xmlMapper = new XmlMapper();
-        JsonNode node = xmlMapper.readTree(Files.readAllBytes(Path.of("src/main/resources/Selta.xml")));
-        ObjectMapper jsonMapper = new ObjectMapper();
-        String json = jsonMapper.writeValueAsString(node);
-        JSONObject object = new JSONObject(json);
+//        Reader xmlSource = new FileReader("src/main/resources/Selta.xml");
+        Reader xmlSource = new FileReader("src/main/resources/Atrucks-orders.xml");
+        JSONObject object = XML.toJSONObject(xmlSource);
 
         Map<String, Object> stringObjectMap = object.toMap();
 
-        for (String keyParent : stringObjectMap.keySet()){
+        for (String keyParent : stringObjectMap.keySet()) {
             nodeList.add(new Node(keyParent, null));
             addChildrenRecursion(nodeList, stringObjectMap, keyParent);
         }
@@ -41,7 +37,14 @@ public class NodeData {
         Object childObject = objectMap.get(keyParent);
         if (childObject instanceof HashMap) {
             Map<String, Object> childMap = (Map<String, Object>) childObject;
-            for (String childKey : childMap.keySet()){
+            for (String childKey : childMap.keySet()) {
+                nodeList.add(new Node(childKey, nodeList.get(parentIndex)));
+                addChildrenRecursion(nodeList, childMap, childKey);
+            }
+        } else if (childObject instanceof ArrayList) {
+            List<Map<String, Object>> childList = (List<Map<String, Object>>) childObject;
+            Map<String, Object> childMap = childList.get(0);
+            for (String childKey : childMap.keySet()) {
                 nodeList.add(new Node(childKey, nodeList.get(parentIndex)));
                 addChildrenRecursion(nodeList, childMap, childKey);
             }

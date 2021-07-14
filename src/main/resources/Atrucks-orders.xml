@@ -1,0 +1,809 @@
+<atrucks:root xmlns:atrucks="https://www.atrucks.su/xmlns/1.0">
+  <atrucks:companies>
+    <atrucks:company>
+      <company_id>db97f6b7-b81d-433c-a4bb-3bf1c6aebe5a</company_id>
+      <name>Тестовая интеграция Алкоторг</name>
+      <req_name>ООО "Тестовая компания"</req_name>
+      <req_inn>1234567890</req_inn>
+      <req_kpp>123445555</req_kpp>
+    </atrucks:company>
+    <atrucks:company>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <name>Тестовая интеграция Евраз</name>
+      <req_name>АО ЕВРАЗ Металл Инпром</req_name>
+      <req_inn>6154062128</req_inn>
+      <req_kpp>615401001</req_kpp>
+    </atrucks:company>
+  </atrucks:companies>
+  <atrucks:cargoes>
+    <atrucks:cargo>
+      <cargo_id>a7b62d53-0bc6-4a69-8b49-018751c2a57b</cargo_id>
+      <company_id>db97f6b7-b81d-433c-a4bb-3bf1c6aebe5a</company_id>
+      <title>Алкогольная продукция</title>
+      <pack_types>
+        <pack_type>Паллеты</pack_type>
+      </pack_types>
+      <weight>17.28</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment />
+      <alcohol_volume>962.6</alcohol_volume>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>3650234e-9fad-4dd9-b66c-20f6e949ef16</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>1.225</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment />
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>110d29bf-65c6-4779-bce6-31b064b2077c</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>8.7</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>Таганрог - Череповец 161219-7</comment>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>0e060012-e172-4c7d-82fe-4709bcc0752f</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>19.744</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment />
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>a74c6eaf-4efc-4a1b-9d55-e1fe77f0243f</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>3.004</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>по Таганрогу 251019-2</comment>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>fd24cccb-aac0-405d-9a2a-cc1312b0504a</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>3.004</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>по Таганрогу 251019-2</comment>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>6d5ce2eb-70cb-4db7-9436-14af43a615b2</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>3.004</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>по Таганрогу 251019-2</comment>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>718c686b-7147-4da6-822f-b536294ca8c3</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>19.766</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>переброска по таганрогу 161219-6</comment>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>f269b787-caca-4e41-a706-8eba435bcf8b</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>7.51</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>СОСТИНА В.А.</comment>
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>0bf8ab6a-423d-45e0-96b9-96b335e18d40</cargo_id>
+      <company_id>33ed960e-36b3-46e3-8d5d-969cf1ff6adb</company_id>
+      <title>Металлопрокат</title>
+      <pack_types />
+      <weight>5.1</weight>
+      <height />
+      <volume />
+      <seats />
+      <temperature_regime />
+      <hazard_class />
+      <belts_required />
+      <comment>Таганрог - Череповец 161219-8</comment>
+    </atrucks:cargo>
+  </atrucks:cargoes>
+  <atrucks:orders>
+    <atrucks:order>
+      <order_id>d62bc6b6-e5e3-11ea-80de-b0262817668b</order_id>
+      <order_human_name>ALK19670</order_human_name>
+      <comment />
+      <price>16000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>15</auction_duration>
+      <cargo_ids>
+        <cargo_id>a7b62d53-0bc6-4a69-8b49-018751c2a57b</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <rear />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>ООО "Тестовая компания"</counteragent>
+          <contact_person>Евдокимова Светлана Валерьевна</contact_person>
+          <comment />
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>Россия, Татарстан Республика, Пестречинский муниципальный район, Кощаковское сельское поселение, д. Старое Кощаково, ул. Складская, д. 2, распределительный центр "Кощаково", назначение: нежилое, литера А, этаж 1, помещения № 39 (S=2753, 4 кв. м), № 40 (S=1067, 3 кв.м)</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2020-10-05</arrival_date>
+          <arrival_time>00:00:00</arrival_time>
+          <counteragent>ЭВЕНТУС ООО</counteragent>
+          <contact_person />
+          <comment />
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>РОССИЯ, Сахалинская обл, Южно-Сахалинск г, Мира пр-кт, 1 Ж</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>a7a1cabb-35f8-445b-a19b-7c00e191f428</order_id>
+      <order_human_name>00-00000004</order_human_name>
+      <comment />
+      <price>999.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels />
+      <cargo_ids>
+        <cargo_id>3650234e-9fad-4dd9-b66c-20f6e949ef16</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Лещенко Ирина Валериевна,</contact_person>
+          <comment>Погрузка с 12:00 по 13:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>390007, Рязанская обл., г. Рязань, пос. Мехзавода, д. 1б</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2021-02-05</arrival_date>
+          <arrival_time>13:00:00</arrival_time>
+          <counteragent>ИП Рыбаков Борис Александрович</counteragent>
+          <contact_person>Ирина, 49131-20873</contact_person>
+          <comment>Выгрузка с 13:00 по 14:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>391301, Рязанская обл., Касимов, пос. Фабрики, дом № 14 А</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>8c124fa1-6dd5-4e59-9bbc-e5e1f8162f6d</order_id>
+      <order_human_name>00-00068979</order_human_name>
+      <comment>Таганрог - Череповец 161219-7</comment>
+      <price>23000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>110d29bf-65c6-4779-bce6-31b064b2077c</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Раду Виктор Георгиевич,</contact_person>
+          <comment>Погрузка с 01:00 по 04:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-12-18</arrival_date>
+          <arrival_time>07:00:00</arrival_time>
+          <counteragent>ПАО "СЕВЕРСТАЛЬ"</counteragent>
+          <contact_person>Кончикова Анастасия, +7(4852)58-43-75   доб.   3427</contact_person>
+          <comment>Выгрузка с 07:00 по 08:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>162600, Россия, Вологодская обл., г. Череповец, Северное шоссе,38А КПП12</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>671acb94-7e72-4858-a69f-a27b7014430a</order_id>
+      <order_human_name>00-00068966</order_human_name>
+      <comment />
+      <price>50200.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels />
+      <cargo_ids>
+        <cargo_id>0e060012-e172-4c7d-82fe-4709bcc0752f</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Калигина Елена,</contact_person>
+          <comment>Погрузка с 08:00 по 11:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>142460, Московская обл, Ногинский р-н, им Воровского рп</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-12-16</arrival_date>
+          <arrival_time>12:00:00</arrival_time>
+          <counteragent>Общество с ограниченной ответственностью "СТАРТ"</counteragent>
+          <contact_person>Садыков Илсур Наилович,</contact_person>
+          <comment>Выгрузка с 12:00 по 13:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>420036, Татарстан Респ, г.Казань, ул.Тэцевская, дом № 12 корпус 4 (бывшая база "Ремстройдормаш")</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>c3270c70-925c-490a-9407-6db2944645c3</order_id>
+      <order_human_name>00-00061154</order_human_name>
+      <comment>по Таганрогу 251019-2</comment>
+      <price>5000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>a74c6eaf-4efc-4a1b-9d55-e1fe77f0243f</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Раду Виктор Георгиевич,</contact_person>
+          <comment>Погрузка с 07:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-10-25</arrival_date>
+          <arrival_time>07:00:00</arrival_time>
+          <counteragent>Общество с ограниченной ответственностью "Промышленное снабжение"</counteragent>
+          <contact_person>Доценко Антон Валерьевич,</contact_person>
+          <comment>Выгрузка с 07:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347924, Ростовская обл., г.Таганрог, пер.Новотрубный, дом № 1</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>d77f8e80-500e-4923-87ec-9af081aabee8</order_id>
+      <order_human_name>00-00061154</order_human_name>
+      <comment>по Таганрогу 251019-2</comment>
+      <price>5000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>fd24cccb-aac0-405d-9a2a-cc1312b0504a</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Раду Виктор Георгиевич,</contact_person>
+          <comment>Погрузка с 07:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-10-25</arrival_date>
+          <arrival_time>07:00:00</arrival_time>
+          <counteragent>Общество с ограниченной ответственностью "Промышленное снабжение"</counteragent>
+          <contact_person>Доценко Антон Валерьевич,</contact_person>
+          <comment>Выгрузка с 07:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347924, Ростовская обл., г.Таганрог, пер.Новотрубный, дом № 1</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>be02d702-f3dd-4112-9552-57b90bbe2b5c</order_id>
+      <order_human_name>00-00061154</order_human_name>
+      <comment>по Таганрогу 251019-2</comment>
+      <price>5000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>6d5ce2eb-70cb-4db7-9436-14af43a615b2</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Раду Виктор Георгиевич,</contact_person>
+          <comment>Погрузка с 07:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-10-25</arrival_date>
+          <arrival_time>07:00:00</arrival_time>
+          <counteragent>Общество с ограниченной ответственностью "Промышленное снабжение"</counteragent>
+          <contact_person>Доценко Антон Валерьевич,</contact_person>
+          <comment>Выгрузка с 07:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347924, Ростовская обл., г.Таганрог, пер.Новотрубный, дом № 1</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>ce97c7e4-cfac-4bea-97a2-ee870195f4f4</order_id>
+      <order_human_name>00-00068913</order_human_name>
+      <comment>переброска по таганрогу 161219-6</comment>
+      <price>3400.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>718c686b-7147-4da6-822f-b536294ca8c3</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Труфанов В.В.,</contact_person>
+          <comment>Погрузка с 08:00 по 11:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Николаевское Шоссе ул, дом № 3-3</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-12-16</arrival_date>
+          <arrival_time>14:00:00</arrival_time>
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Раду Виктор Георгиевич,</contact_person>
+          <comment>Выгрузка с 14:00 по 15:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>8f0990b0-b8ac-432b-b97c-127d710fa0b2</order_id>
+      <order_human_name>00-00064993</order_human_name>
+      <comment>СОСТИНА В.А.</comment>
+      <price>9167.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>60</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>f269b787-caca-4e41-a706-8eba435bcf8b</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Комолова Наталья Васильевна,</contact_person>
+          <comment>Погрузка с 08:00 по 11:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-11-18</arrival_date>
+          <arrival_time>11:01:00</arrival_time>
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Кисиль Марина Евгеньевна,</contact_person>
+          <comment>Выгрузка с 11:01 по 12:01</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>344090, Ростовская обл., г. Ростов-на-Дону, ул. Доватора, д. 152 б</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>88410d0c-180c-4b00-aeb5-4ad8261fb49a</order_id>
+      <order_human_name>00-00068980</order_human_name>
+      <comment>Таганрог - Череповец 161219-8</comment>
+      <price>31000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>30</auction_duration>
+      <labels>
+        <label>Особые условия!!!</label>
+      </labels>
+      <cargo_ids>
+        <cargo_id>0bf8ab6a-423d-45e0-96b9-96b335e18d40</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <open />
+          <awning />
+        </types>
+        <carrying_capacity>25</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <upper />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2021-07-14</arrival_date>
+          <arrival_time />
+          <counteragent>АО "ЕВРАЗ Металл Инпром"</counteragent>
+          <contact_person>Раду Виктор Георгиевич,</contact_person>
+          <comment>Погрузка с 01:00 по 04:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>347913, Ростовская обл, Таганрог г, Химическая ул, дом № 9</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date>2019-12-16</arrival_date>
+          <arrival_time>08:00:00</arrival_time>
+          <counteragent>ПАО "СЕВЕРСТАЛЬ"</counteragent>
+          <contact_person>Кончикова Анастасия, +7(4852)58-43-75   доб.   3427</contact_person>
+          <comment>Выгрузка с 08:00 по 09:00</comment>
+          <company_address />
+          <company_inn />
+          <address>
+            <free_form>162600, Россия, Вологодская обл., г. Череповец, Северное шоссе,38А КПП12</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+  </atrucks:orders>
+  <atrucks:auction_results>
+    <atrucks:auction_result>
+      <order_id>d62bc6b6-e5e3-11ea-80de-b0262817668b</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>ALK19670</order_human_name>
+      <auction_status>
+        <current_price>16000.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>4c100040074230e661b51322ce40a598</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>a7a1cabb-35f8-445b-a19b-7c00e191f428</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00000004</order_human_name>
+      <auction_status>
+        <current_price>999.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>6014267f4395feb156a678063703c8a3</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>8c124fa1-6dd5-4e59-9bbc-e5e1f8162f6d</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00068979</order_human_name>
+      <auction_status>
+        <current_price>23000.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>da0a9763cb98245fe678f1731efc39d9</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>671acb94-7e72-4858-a69f-a27b7014430a</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00068966</order_human_name>
+      <auction_status>
+        <current_price>50200.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>ff49307ba2ab29807553f8a8c376bb79</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>c3270c70-925c-490a-9407-6db2944645c3</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00061154</order_human_name>
+      <auction_status>
+        <current_price>5000.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>6266a15cd209848fb67c7089f7d581fe</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>d77f8e80-500e-4923-87ec-9af081aabee8</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00061154</order_human_name>
+      <auction_status>
+        <current_price>5000.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>551f3967b8746e5f670d5e2800736d20</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>be02d702-f3dd-4112-9552-57b90bbe2b5c</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00061154</order_human_name>
+      <auction_status>
+        <current_price>5000.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>166505a0050437d9ea900ae2b72f9220</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>ce97c7e4-cfac-4bea-97a2-ee870195f4f4</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00068913</order_human_name>
+      <auction_status>
+        <current_price>3400.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>3d3a2a1d2cabb0a1ce43be4fc6ffad8f</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>8f0990b0-b8ac-432b-b97c-127d710fa0b2</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00064993</order_human_name>
+      <auction_status>
+        <current_price>9167.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>46bbfa4ae2f1ba1996edce2cf3c480d9</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>88410d0c-180c-4b00-aeb5-4ad8261fb49a</order_id>
+      <order_status>auction</order_status>
+      <order_status_description>аукцион, ожидает распределения</order_status_description>
+      <order_human_name>00-00068980</order_human_name>
+      <auction_status>
+        <current_price>31000.00</current_price>
+        <current_price_vat_type>with_vat</current_price_vat_type>
+      </auction_status>
+      <hash>6144f19776adf87d16315f54bbd438a0</hash>
+    </atrucks:auction_result>
+  </atrucks:auction_results>
+</atrucks:root>

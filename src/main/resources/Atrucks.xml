@@ -1,0 +1,230 @@
+<?xml version='1.0' encoding='utf-8'?>
+<atrucks:root
+  xmlns:atrucks="https://www.atrucks.su/xmlns/1.0">
+  <atrucks:companies>
+    <atrucks:company>
+      <company_id>ffdbc034-ef85-4549-9af0-5c49ca0f0c36</company_id>
+      <name>Для тестов API Перевозчика - Заказчик</name>
+      <req_name>ООО "Тестовая компания"</req_name>
+      <req_inn>1234567890</req_inn>
+      <req_kpp>123445555</req_kpp>
+    </atrucks:company>
+  </atrucks:companies>
+  <atrucks:cargoes>
+    <atrucks:cargo>
+      <cargo_id>05fbb434-3a2e-4bb2-86d5-f2263a21e5ec</cargo_id>
+      <company_id>ffdbc034-ef85-4549-9af0-5c49ca0f0c36</company_id>
+      <title>Товар от Заказчик(1)</title>
+      <pack_types>
+        <pack_type>Паллеты</pack_type>
+      </pack_types>
+      <weight>7.0</weight>
+      <height />
+      <volume />
+      <seats>32.0</seats>
+      <hazard_class />
+      <belts_required />
+    </atrucks:cargo>
+    <atrucks:cargo>
+      <cargo_id>ea1dd5c0-06f1-4f2f-9a78-bc4d6dc62df2</cargo_id>
+      <company_id>ffdbc034-ef85-4549-9af0-5c49ca0f0c36</company_id>
+      <title>Очень важный груз</title>
+      <pack_types>
+        <pack_type>Россыпью</pack_type>
+        <pack_type>Пачки</pack_type>
+      </pack_types>
+      <weight>10.0</weight>
+      <height />
+      <volume />
+      <seats>31.0</seats>
+      <hazard_class />
+      <belts_required />
+    </atrucks:cargo>
+  </atrucks:cargoes>
+  <atrucks:orders>
+    <atrucks:order>
+      <order_id>06e571fe-2f42-4143-8959-ba7b4dc44329</order_id>
+      <order_human_name>56777</order_human_name>
+      <comment>высота паллет: 2.4</comment>
+      <price>44000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>60</auction_duration>
+      <cargo_ids>
+        <cargo_id>05fbb434-3a2e-4bb2-86d5-f2263a21e5ec</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <awning />
+          <thermally_insulated />
+          <refrigerator />
+        </types>
+        <carrying_capacity>21</carrying_capacity>
+        <volume>82</volume>
+        <loading_types>
+          <rear />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2019-05-02</arrival_date>
+          <arrival_time />
+          <counteragent />
+          <contact_person />
+          <comment>Дневная погрузка</comment>
+          <address>
+            <free_form>Татарстан, г. Елабуга, Территория ОЭЗ «Алабуга»</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date />
+          <arrival_time />
+          <counteragent>Magnit, АО "ТАНДЕР"</counteragent>
+          <contact_person />
+          <comment>на выгрузку приезжать СТРОГО  за 1 час до временого окна, высота рамы не менее  1,2 (НИЗКОРАМНИК НЕ СТАВИТЬ!!!!)</comment>
+          <address>
+            <free_form>Свердловская обл, г Первоуральск</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+    <atrucks:order>
+      <order_id>fa3fb211-68c2-449a-b4f3-bb74132eb8d8</order_id>
+      <order_human_name />
+      <comment />
+      <price>12000.00</price>
+      <order_price_vat_type>with_vat</order_price_vat_type>
+      <order_price_currency>RUB</order_price_currency>
+      <auction_duration>60</auction_duration>
+      <cargo_ids>
+        <cargo_id>ea1dd5c0-06f1-4f2f-9a78-bc4d6dc62df2</cargo_id>
+      </cargo_ids>
+      <truck>
+        <types>
+          <awning />
+        </types>
+        <carrying_capacity>10</carrying_capacity>
+        <volume>50</volume>
+        <loading_types>
+          <rear />
+        </loading_types>
+      </truck>
+      <atrucks:route>
+        <atrucks:waypoint>
+          <waypoint_type>loading</waypoint_type>
+          <arrival_date>2019-02-19</arrival_date>
+          <arrival_time>16:00:00</arrival_time>
+          <counteragent>ООО "Заказчик2"</counteragent>
+          <contact_person />
+          <comment />
+          <address>
+            <free_form>г Саранск, пр-кт Ленина, д 1А</free_form>
+          </address>
+        </atrucks:waypoint>
+        <atrucks:waypoint>
+          <waypoint_type>unloading</waypoint_type>
+          <arrival_date />
+          <arrival_time />
+          <counteragent>Торговый Дом Перк АО</counteragent>
+          <contact_person />
+          <comment>Опаздывать НЕЛЬЗЯ!!! Огромные ШТРАФЫ!!!</comment>
+          <address>
+            <free_form>г Санкт-Петербург, ул Седова, д 94</free_form>
+          </address>
+        </atrucks:waypoint>
+      </atrucks:route>
+    </atrucks:order>
+  </atrucks:orders>
+  <atrucks:auction_results>
+    <atrucks:auction_result>
+      <order_id>06e571fe-2f42-4143-8959-ba7b4dc44329</order_id>
+      <order_status>in_progress</order_status>
+      <order_status_description>подтвержден перевозчиком, в работе</order_status_description>
+      <order_price_contents>
+        <carrier_price>44000.00</carrier_price>
+        <carrier_price_vat_type>with_vat</carrier_price_vat_type>
+        <carrier_price_vat_description>с НДС</carrier_price_vat_description>
+        <carrier_extra_price />
+        <insurance_price />
+        <hash>c48cace757da0fb89cf68ca8d7bc3810</hash>
+      </order_price_contents>
+      <agreed_dates>
+        <first_waypoint_arrival_date>2019-05-02</first_waypoint_arrival_date>
+        <first_waypoint_arrival_time />
+        <hash>4b022138fa6b937242c5dc19b7e76124</hash>
+      </agreed_dates>
+      <carrier>
+        <name>Перевозчик тестовый</name>
+        <req_name>ООО "Перевозчик"</req_name>
+        <req_inn>12211122221</req_inn>
+        <req_kpp>12133331313</req_kpp>
+        <hash>457cb100f14652f701a168ea1bc1b4e7</hash>
+      </carrier>
+      <driver>
+        <name>Иванов Иван Иванович</name>
+        <birthdate>1990-01-03</birthdate>
+        <passport>Серия 1234 Номер 123456 Выдан УВД Советского района , 09.01.2014</passport>
+        <driving_licence>12цыа333</driving_licence>
+        <phone>+79999999999</phone>
+        <hash>c85f03d0e57e331e3709b1c57dad285e</hash>
+      </driver>
+      <transport>
+        <truck>
+          <model>МАЗ</model>
+          <registration_plate>К245УВ 525 RUS</registration_plate>
+        </truck>
+        <trailer>
+          <registration_plate />
+        </trailer>
+        <hash>59f6c8ccec9d59fc935ed8ae82bb5d59</hash>
+      </transport>
+      <hash>3122dde22f0f91a88a7b7e28a16ad24b</hash>
+    </atrucks:auction_result>
+    <atrucks:auction_result>
+      <order_id>fa3fb211-68c2-449a-b4f3-bb74132eb8d8</order_id>
+      <order_status>in_progress</order_status>
+      <order_status_description>подтвержден перевозчиком, в работе</order_status_description>
+      <order_price_contents>
+        <carrier_price>12000.00</carrier_price>
+        <carrier_price_vat_type>with_vat</carrier_price_vat_type>
+        <carrier_price_vat_description>с НДС</carrier_price_vat_description>
+        <carrier_extra_price />
+        <insurance_price />
+        <hash>f2b8d6dcbaebfcb9e2cd86bb12221774</hash>
+      </order_price_contents>
+      <agreed_dates>
+        <first_waypoint_arrival_date>2019-02-19</first_waypoint_arrival_date>
+        <first_waypoint_arrival_time>16:00:00</first_waypoint_arrival_time>
+        <hash>d50cec0669d98e5a8364332f8634b9b9</hash>
+      </agreed_dates>
+      <carrier>
+        <name>Перевозчик тестовый</name>
+        <req_name>ООО "Перевозчик"</req_name>
+        <req_inn>12211122221</req_inn>
+        <req_kpp>12133331313</req_kpp>
+        <hash>457cb100f14652f701a168ea1bc1b4e7</hash>
+      </carrier>
+      <driver>
+        <name>Иванов Иван Иванович</name>
+        <birthdate>1990-01-03</birthdate>
+        <passport>Серия 1234 Номер 123456 Выдан УВД Советского района , 09.01.2014</passport>
+        <driving_licence>12цыа333</driving_licence>
+        <phone>+79999999999</phone>
+        <hash>c85f03d0e57e331e3709b1c57dad285e</hash>
+      </driver>
+      <transport>
+        <truck>
+          <model>МАЗ</model>
+          <registration_plate>К245УВ 525 RUS</registration_plate>
+        </truck>
+        <trailer>
+          <registration_plate />
+        </trailer>
+        <hash>59f6c8ccec9d59fc935ed8ae82bb5d59</hash>
+      </transport>
+      <hash>0a182334f5c7c4d3e276717864d109f3</hash>
+    </atrucks:auction_result>
+  </atrucks:auction_results>
+</atrucks:root>
