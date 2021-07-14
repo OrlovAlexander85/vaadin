@@ -1,6 +1,7 @@
 package ru.globaltruck.vaadin;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
@@ -13,7 +14,6 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Route
@@ -24,7 +24,6 @@ public class MainView extends VerticalLayout {
 
     private final Button openGrid = new Button("Развернуть все");
     private final Button closeGrid = new Button("Свернуть все");
-
     private final Button expendFirst = new Button("Развернуть первую");
 
     public MainView(NodeData nodeData) throws FileNotFoundException {
@@ -67,9 +66,15 @@ public class MainView extends VerticalLayout {
             nodeTreeGrid.getSelectedItems().forEach(item ->
                 nodeTreeGrid.getTreeData().getChildren(item).forEach(nodeTreeGrid::select))
         );
+        List<Node> nodeSelected = new ArrayList<>();
+        nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        nodeTreeGrid.addSelectionListener(selectionEvent -> {
+            nodeSelected.clear();
+            nodeSelected.add(selectionEvent.getFirstSelectedItem().get());
+        });
         expendFirst.addClickListener(event -> {
-            List<Node> list = (nodeList.stream().filter(node -> node.getParent() == null).collect(Collectors.toList()));
-            nodeTreeGrid.expandRecursively(list, 10);
+            nodeTreeGrid.expandRecursively(nodeSelected, 10);
+            nodeSelected.clear();
         });
 
         add(nodeTreeGrid, openGrid, closeGrid, expendFirst);
