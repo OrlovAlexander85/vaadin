@@ -1,8 +1,14 @@
 package ru.globaltruck.vaadin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import lombok.SneakyThrows;
+import org.json.JSONObject;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NodeData {
@@ -10,23 +16,29 @@ public class NodeData {
 
     private static final List<Node> NODE_LIST = createDepartmentList();
 
+    @SneakyThrows
     private static List<Node> createDepartmentList() {
         List<Node> nodeList = new ArrayList<>();
 
-//        XmlMapper xmlMapper = new XmlMapper();
-//        JsonNode node = xmlMapper.readTree(Files.readAllBytes(Path.of("src/main/resources/Selta.xml")));
-//        ObjectMapper jsonMapper = new ObjectMapper();
-//        String json = jsonMapper.writeValueAsString(node);
-//        JSONObject object = new JSONObject(json);
+        XmlMapper xmlMapper = new XmlMapper();
+        JsonNode node = xmlMapper.readTree(Files.readAllBytes(Path.of("src/main/resources/Selta.xml")));
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String json = jsonMapper.writeValueAsString(node);
+        JSONObject object = new JSONObject(json);
 
-        nodeList.add(
-                new Node("Selta", null));
-        nodeList.add(
-                new Node("Груз", nodeList.get(0)));
-        nodeList.add(
-                new Node("Цена", nodeList.get(0)));
-        nodeList.add(
-                new Node("Вес", nodeList.get(1)));
+        Map<String, Object> stringObjectMap = object.toMap();
+
+        for (String key : stringObjectMap.keySet()){
+            nodeList.add(new Node(key, null));
+            int index = nodeList.size() - 1;
+            Object map = stringObjectMap.get(key);
+            if (map instanceof HashMap) {
+                Map<String, Object> stringObjectMap1 = (Map<String, Object>) map;
+                for (String key2 : stringObjectMap1.keySet()){
+                    nodeList.add(new Node(key2, nodeList.get(index)));
+                }
+            }
+        }
 
         return nodeList;
     }
