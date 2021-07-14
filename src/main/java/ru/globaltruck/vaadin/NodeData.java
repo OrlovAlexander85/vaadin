@@ -2,37 +2,24 @@ package ru.globaltruck.vaadin;
 
 import lombok.SneakyThrows;
 import org.json.JSONObject;
-import org.json.XML;
+import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
-import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class NodeData {
 
-
-    public static final List<Node> NODE_LIST = createNodeList();
-
     @SneakyThrows
-    private static List<Node> createNodeList() {
-        List<Node> nodeList = new ArrayList<>();
-
-//        Reader xmlSource = new FileReader("src/main/resources/Selta.xml");
-        Reader xmlSource = new FileReader("src/main/resources/Atrucks-orders.xml");
-        JSONObject object = XML.toJSONObject(xmlSource);
-
-        Map<String, Object> stringObjectMap = object.toMap();
-
+    public void update(List<Node> nodeList, JSONObject jsonObject) {
+        Map<String, Object> stringObjectMap = jsonObject.toMap();
         for (String keyParent : stringObjectMap.keySet()) {
             nodeList.add(new Node(keyParent, null));
             addChildrenRecursion(nodeList, stringObjectMap, keyParent);
         }
-
-        return nodeList;
     }
 
-    private static void addChildrenRecursion(List<Node> nodeList, Map<String, Object> objectMap, String keyParent) {
+    private void addChildrenRecursion(List<Node> nodeList, Map<String, Object> objectMap, String keyParent) {
         int parentIndex = nodeList.size() - 1;
         Object childObject = objectMap.get(keyParent);
         if (childObject instanceof HashMap) {
@@ -51,15 +38,15 @@ public class NodeData {
         }
     }
 
-    public List<Node> getRootDepartments() {
-        return NODE_LIST.stream()
-                .filter(node -> node.getParent() == null)
-                .collect(Collectors.toList());
+    public List<Node> getRootNods(List<Node> nodeList) {
+        return nodeList.stream()
+            .filter(node -> node.getParent() == null)
+            .collect(Collectors.toList());
     }
 
-    public List<Node> getChildDepartments(Node parent) {
-        return NODE_LIST.stream()
-                .filter(node -> Objects.equals(node.getParent(), parent))
-                .collect(Collectors.toList());
+    public List<Node> getChildDepartments(Node parent, List<Node> nodeList) {
+        return nodeList.stream()
+            .filter(node -> Objects.equals(node.getParent(), parent))
+            .collect(Collectors.toList());
     }
 }

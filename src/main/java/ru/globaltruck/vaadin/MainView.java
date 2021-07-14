@@ -1,59 +1,77 @@
 package ru.globaltruck.vaadin;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
 import com.vaadin.flow.router.Route;
+import org.json.JSONObject;
+import org.json.XML;
 
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Route
 public class MainView extends VerticalLayout {
-    private TreeGrid<Node> nodeTreeGrid = new TreeGrid<>();
-    private NodeData nodeData = new NodeData();
 
-    private Button openGrid = new Button("Развернуть все");
-    private Button closeGrid = new Button("Свернуть все");
+    private final TreeGrid<Node> nodeTreeGrid = new TreeGrid<>();
+    private final NodeData nodeData;
 
-    private Button expendFirst = new Button("Развернуть первую");
+    private final Button openGrid = new Button("Развернуть все");
+    private final Button closeGrid = new Button("Свернуть все");
 
-    public MainView() {
+    private final Button expendFirst = new Button("Развернуть первую");
 
-        List<Node> rootNodes = nodeData.getRootDepartments();
+    public MainView(NodeData nodeData) throws FileNotFoundException {
+        this.nodeData = nodeData;
+
+        Reader xmlSourceAtr = new FileReader("src/main/resources/Atrucks.xml");
+        Reader xmlSourceSel = new FileReader("src/main/resources/Selta.xml");
+        JSONObject objectAtr = XML.toJSONObject(xmlSourceAtr);
+        JSONObject objectSel = XML.toJSONObject(xmlSourceSel);
+
+        List<Node> nodeList = new ArrayList<>();
+        this.nodeData.update(nodeList, objectAtr);
+        this.nodeData.update(nodeList, objectSel);
+
+
+        List<Node> rootNodes = this.nodeData.getRootNods(nodeList);
         nodeTreeGrid.setItems(rootNodes,
-                parent -> nodeData.getChildDepartments(parent));
+            parent -> this.nodeData.getChildDepartments(parent, nodeList));
 
         nodeTreeGrid.addHierarchyColumn(Node::getName)
-                .setHeader("Node Name");
+            .setHeader("Node Name");
 
         // Развернуть все ноды
         openGrid.addClickListener(event -> {
             final Stream<Node> rootNodes2 = nodeTreeGrid
-                    .getDataProvider()
-                    .fetchChildren(new HierarchicalQuery<>(null, null));
+                .getDataProvider()
+                .fetchChildren(new HierarchicalQuery<>(null, null));
             nodeTreeGrid.expandRecursively(rootNodes2, 4);
         });
 
         // Свернуть все ноды
         closeGrid.addClickListener(event -> {
             final Stream<Node> rootNodes2 = nodeTreeGrid
-                    .getDataProvider()
-                    .fetchChildren(new HierarchicalQuery<>(null, null));
+                .getDataProvider()
+                .fetchChildren(new HierarchicalQuery<>(null, null));
             nodeTreeGrid.collapseRecursively(rootNodes2, 4);
         });
 
-
-
+        nodeTreeGrid.addSelectionListener(e ->
+            nodeTreeGrid.getSelectedItems().forEach(item ->
+                nodeTreeGrid.getTreeData().getChildren(item).forEach(nodeTreeGrid::select))
+        );
         expendFirst.addClickListener(event -> {
-            List<Node> nodeList = Arrays.asList(NodeData.NODE_LIST.get(0));
-            nodeTreeGrid.expandRecursively(nodeList, 4);
+            List<Node> list = (nodeList.stream().filter(node -> node.getParent() == null).collect(Collectors.toList()));
+            nodeTreeGrid.expandRecursively(list, 10);
         });
 
-
         add(nodeTreeGrid, openGrid, closeGrid, expendFirst);
-
     }
 }
