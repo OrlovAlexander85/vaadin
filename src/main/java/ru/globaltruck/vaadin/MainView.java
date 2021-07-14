@@ -7,7 +7,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 import org.json.JSONObject;
 
@@ -23,7 +22,7 @@ public class MainView extends VerticalLayout {
     private final Select<String> labelSelect = new Select<>();
     private final Div value = new Div();
 
-    private final TreeGrid<JsonNode> treeGrid = new TreeGrid<>();
+    private final TreeGrid<String> treeGrid = new TreeGrid<>();
 
     public MainView(ExternalSystemRepository repo) throws IOException {
         this.systemRepository = repo;
@@ -34,13 +33,22 @@ public class MainView extends VerticalLayout {
         ObjectMapper jsonMapper = new ObjectMapper();
         String json = jsonMapper.writeValueAsString(node);
 
+        /**
+         * Получаем корневые Ноды
+         */
+        List<String> rootNodes = new ArrayList<>();
+        node.fields().forEachRemaining(e -> {
+            if (node.findParent(e.getKey()) == node) {
+                rootNodes.add(e.getKey());
+            }
+        });
 //        наименование колонки дерева
         treeGrid.addHierarchyColumn(s -> s).setHeader("изи bitch");
 //        try {
         //читаем json
         JSONObject object = new JSONObject(json);
         //заполнение дерева из произвольного json
-        List<String> rootItems = Arrays.asList(JSONObject.getNames(object));
+//        List<String> rootItems = Arrays.asList(JSONObject.getNames(object));
 //            treeGrid.setItems(rootItems, s -> {
 ////                return test(rootItems, s, object);
 //                if (object.has(s) && object.get(s) instanceof JSONObject) {
@@ -54,7 +62,10 @@ public class MainView extends VerticalLayout {
 //        } catch (Exception e) {
 //            throw new RuntimeException("гамно а не json");
 //        }
-        treeGrid.setItems();
+        treeGrid.setItems(rootNodes, s -> {
+            return testJsonNode(rootNodes, s, node);
+
+        });
 
 
 //        TreeGrid<Department> grid = new TreeGrid<>();
@@ -84,6 +95,24 @@ public class MainView extends VerticalLayout {
 //                    return Arrays.stream(JSONObject.getNames(level1)).map(s1 -> s + "." + s1).collect(Collectors.toList());
             return test(rootItems, s, level1);
 //            return Arrays.asList(JSONObject.getNames(level1));
+        } else
+            return Collections.emptyList();
+    }
+
+
+
+
+    private List<String> testJsonNode(List<String> rootItems, String s, JsonNode node) {
+        if (node.has(s) && node.get(s) != null) {
+            JsonNode level1 = node.get(s);
+//                    return Arrays.stream(JSONObject.getNames(level1)).map(s1 -> s + "." + s1).collect(Collectors.toList());
+//            return testJsonNode(rootItems, s, level1);
+            node.fields().forEachRemaining(e -> {
+                if (node.findParent(e.getKey()) == node) {
+                    rootNodes.add(e.getKey());
+                }
+            });
+            return Arrays.asList(level1));
         } else
             return Collections.emptyList();
     }
