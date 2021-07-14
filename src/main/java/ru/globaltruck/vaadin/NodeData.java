@@ -30,25 +30,20 @@ public class NodeData {
 
         for (String keyParent : stringObjectMap.keySet()){
             nodeList.add(new Node(keyParent, null));
-            int indexParent = nodeList.size() - 1;
-            Object map = stringObjectMap.get(keyParent);
-            if (map instanceof HashMap) {
-                Map<String, Object> stringObjectMapLevel2 = (Map<String, Object>) map;
-                recursion(nodeList, indexParent, stringObjectMapLevel2);
-            }
+            addChildrenRecursion(nodeList, stringObjectMap, keyParent);
         }
 
         return nodeList;
     }
 
-    private static void recursion(List<Node> nodeList, int indexParent, Map<String, Object> stringObjectMapLevel2) {
-        for (String keyLevel2 : stringObjectMapLevel2.keySet()){
-            nodeList.add(new Node(keyLevel2, nodeList.get(indexParent)));
-            int indexLevel2 = nodeList.size() - 1;
-            Object mapLevel2 = stringObjectMapLevel2.get(keyLevel2);
-            if (mapLevel2 instanceof HashMap) {
-                Map<String, Object> stringObjectMap2 = (Map<String, Object>) mapLevel2;
-                recursion(nodeList, indexLevel2, stringObjectMap2);
+    private static void addChildrenRecursion(List<Node> nodeList, Map<String, Object> objectMap, String keyParent) {
+        int parentIndex = nodeList.size() - 1;
+        Object childObject = objectMap.get(keyParent);
+        if (childObject instanceof HashMap) {
+            Map<String, Object> childMap = (Map<String, Object>) childObject;
+            for (String childKey : childMap.keySet()){
+                nodeList.add(new Node(childKey, nodeList.get(parentIndex)));
+                addChildrenRecursion(nodeList, childMap, childKey);
             }
         }
     }
