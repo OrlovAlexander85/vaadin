@@ -47,7 +47,7 @@ const projectStaticAssetsFolders = [
   frontendFolder
 ];
 
-const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, '../VAADIN/static');
+const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, 'static');
 
 // Folders in the project which can contain application themes
 const themeProjectFolders = projectStaticAssetsFolders.map((folder) =>
