@@ -7,15 +7,14 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Route
 public class MainView extends VerticalLayout {
@@ -24,7 +23,7 @@ public class MainView extends VerticalLayout {
     private final Select<String> labelSelect = new Select<>();
     private final Div value = new Div();
 
-    private final TreeGrid<String> treeGrid = new TreeGrid<>();
+    private final TreeGrid<JsonNode> treeGrid = new TreeGrid<>();
 
     public MainView(ExternalSystemRepository repo) throws IOException {
         this.systemRepository = repo;
@@ -35,32 +34,57 @@ public class MainView extends VerticalLayout {
         ObjectMapper jsonMapper = new ObjectMapper();
         String json = jsonMapper.writeValueAsString(node);
 
-        //наименование колонки дерева
+//        наименование колонки дерева
         treeGrid.addHierarchyColumn(s -> s).setHeader("изи bitch");
-        try {
-            //читаем json
-            JSONObject object = new JSONObject(json);
-            //заполнение дерева из произвольного json
-            List<String> rootItems = Arrays.asList(JSONObject.getNames(object));
-            treeGrid.setItems(rootItems, s -> {
-                if (object.has(s) && object.get(s) instanceof JSONObject) {
-                    JSONObject level1 = (JSONObject) object.get(s);
-                    return Arrays.asList(JSONObject.getNames(level1));
-                } else
-                    return Collections.emptyList();
-            });
-        } catch (Exception e) {
-            throw new RuntimeException("гамно а не json");
-        }
+//        try {
+        //читаем json
+        JSONObject object = new JSONObject(json);
+        //заполнение дерева из произвольного json
+        List<String> rootItems = Arrays.asList(JSONObject.getNames(object));
+//            treeGrid.setItems(rootItems, s -> {
+////                return test(rootItems, s, object);
+//                if (object.has(s) && object.get(s) instanceof JSONObject) {
+//                    JSONObject level1 = (JSONObject) object.get(s);
+////                    return Arrays.stream(JSONObject.getNames(level1)).map(s1 -> s + "." + s1).collect(Collectors.toList());
+////                    return Arrays.asList(JSONObject.getNames(level1));
+//                    return Arrays.asList(JSONObject.getNames(level1));
+//                } else
+//                    return Collections.emptyList();
+//            });
+//        } catch (Exception e) {
+//            throw new RuntimeException("гамно а не json");
+//        }
+        treeGrid.setItems();
+
+
+//        TreeGrid<Department> grid = new TreeGrid<>();
+//        DepartmentData departmentData = new DepartmentData();
+//        grid.setItems(departmentData.getRootDepartments(),
+//            departmentData::getChildDepartments);
+//        grid.addHierarchyColumn(Department::getName)
+//            .setHeader("Department Name");
+//        grid.addColumn(Department::getManager).setHeader("Manager");
+//
+//        add(grid);
 
         labelSelect.setLabel("Внешняя система");
 
         value.setText("Выберите внешнюю систему");
         labelSelect.addValueChangeListener(
-                event -> value.setText("Выбрано: " + event.getValue()));
+            event -> value.setText("Выбрано: " + event.getValue()));
 
         // Добавляет дочерние компоненты
-        add(labelSelect, value, treeGrid);
+        add(treeGrid);
 
+    }
+
+    private List<String> test(List<String> rootItems, String s, JSONObject object) {
+        if (object.has(s) && object.get(s) instanceof JSONObject) {
+            JSONObject level1 = (JSONObject) object.get(s);
+//                    return Arrays.stream(JSONObject.getNames(level1)).map(s1 -> s + "." + s1).collect(Collectors.toList());
+            return test(rootItems, s, level1);
+//            return Arrays.asList(JSONObject.getNames(level1));
+        } else
+            return Collections.emptyList();
     }
 }
