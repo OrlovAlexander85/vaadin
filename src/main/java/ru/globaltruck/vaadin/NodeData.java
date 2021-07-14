@@ -34,8 +34,16 @@ public class NodeData {
             Object map = stringObjectMap.get(key);
             if (map instanceof HashMap) {
                 Map<String, Object> stringObjectMap1 = (Map<String, Object>) map;
-                for (String key2 : stringObjectMap1.keySet()){
-                    nodeList.add(new Node(key2, nodeList.get(index)));
+                for (String keyLevel2 : stringObjectMap1.keySet()){
+                    nodeList.add(new Node(keyLevel2, nodeList.get(index)));
+                    int indexLevel2 = nodeList.size() - 1;
+                    Object mapLevel2 = stringObjectMap1.get(keyLevel2);
+                    if (mapLevel2 instanceof HashMap) {
+                        Map<String, Object> stringObjectMap2 = (Map<String, Object>) mapLevel2;
+                        for (String keyLevel3 : stringObjectMap2.keySet()) {
+                            nodeList.add(new Node(keyLevel3, nodeList.get(indexLevel2)));
+                        }
+                    }
                 }
             }
         }

@@ -8,9 +8,7 @@ import java.util.*;
 
 @Route
 public class MainView extends VerticalLayout {
-    private TreeGrid<Department> departmentTreeGrid = new TreeGrid<>();
     private TreeGrid<Node> nodeTreeGrid = new TreeGrid<>();
-    private DepartmentData departmentData = new DepartmentData();
     private NodeData nodeData = new NodeData();
 
     public MainView() {
@@ -19,15 +17,8 @@ public class MainView extends VerticalLayout {
         nodeTreeGrid.setItems(rootNodes,
                 parent -> nodeData.getChildDepartments(parent));
 
-//        List<Department> rootDepartments = departmentData.getRootDepartments();
-//        departmentTreeGrid.setItems(rootDepartments,
-//                parent -> departmentData.getChildDepartments(parent));
-
         nodeTreeGrid.addHierarchyColumn(Node::getName)
                 .setHeader("Node Name");
-
-//        treeGrid.addHierarchyColumn(Department::getName)
-//                .setHeader("Department Name");
 
         add(nodeTreeGrid);
 
