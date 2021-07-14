@@ -24,7 +24,7 @@ public class MainView extends VerticalLayout {
 
     private final Button openGrid = new Button("Развернуть все");
     private final Button closeGrid = new Button("Свернуть все");
-    private final Button expendFirst = new Button("Развернуть первую");
+    private final Button expendSelected = new Button("Развернуть выбранную");
 
     public MainView(NodeData nodeData) throws FileNotFoundException {
         this.nodeData = nodeData;
@@ -62,21 +62,18 @@ public class MainView extends VerticalLayout {
             nodeTreeGrid.collapseRecursively(rootNodes2, 4);
         });
 
-        nodeTreeGrid.addSelectionListener(e ->
-            nodeTreeGrid.getSelectedItems().forEach(item ->
-                nodeTreeGrid.getTreeData().getChildren(item).forEach(nodeTreeGrid::select))
-        );
+        // Развернуть выбранную ноду
         List<Node> nodeSelected = new ArrayList<>();
         nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         nodeTreeGrid.addSelectionListener(selectionEvent -> {
             nodeSelected.clear();
-            nodeSelected.add(selectionEvent.getFirstSelectedItem().get());
+            nodeSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
         });
-        expendFirst.addClickListener(event -> {
+        expendSelected.addClickListener(event -> {
             nodeTreeGrid.expandRecursively(nodeSelected, 10);
             nodeSelected.clear();
         });
 
-        add(nodeTreeGrid, openGrid, closeGrid, expendFirst);
+        add(nodeTreeGrid, openGrid, closeGrid, expendSelected);
     }
 }
