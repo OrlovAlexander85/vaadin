@@ -2,6 +2,7 @@ package ru.globaltruck.vaadin;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
@@ -24,7 +25,7 @@ public class MainView extends VerticalLayout {
 
     private final Button openGrid = new Button("Развернуть все");
     private final Button closeGrid = new Button("Свернуть все");
-    private final Button expendSelected = new Button("Развернуть выбранную");
+    private final Button expandSelected = new Button("Развернуть выбранную");
 
     public MainView(NodeData nodeData) throws FileNotFoundException {
         this.nodeData = nodeData;
@@ -70,11 +71,13 @@ public class MainView extends VerticalLayout {
             nodeSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
         });
 
-        expendSelected.addClickListener(event -> {
+        expandSelected.addClickListener(event -> {
             nodeTreeGrid.expandRecursively(nodeSelected, 10);
             nodeSelected.clear();
         });
 
-        add(nodeTreeGrid, openGrid, closeGrid, expendSelected);
+        HorizontalLayout hLayout = new HorizontalLayout();
+        hLayout.add(openGrid, closeGrid, expandSelected);
+        add(nodeTreeGrid, hLayout);
     }
 }
