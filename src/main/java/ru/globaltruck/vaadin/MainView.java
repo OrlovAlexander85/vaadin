@@ -1,6 +1,8 @@
 package ru.globaltruck.vaadin;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -23,6 +25,7 @@ public class MainView extends VerticalLayout {
     private final TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
     private final NodeData nodeData;
 
+    private final FormLayout settingsFormLayout = new FormLayout();
     private final Button openGrid = new Button("Развернуть все");
     private final Button closeGrid = new Button("Свернуть все");
     private final Button expandSelected = new Button("Развернуть выбранную");
@@ -78,9 +81,26 @@ public class MainView extends VerticalLayout {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
 
-        HorizontalLayout hLayout = new HorizontalLayout();
-        hLayout.add(openGrid, closeGrid, expandSelected);
-        add(filter, nodeTreeGrid, hLayout);
+        // Форма с настройками
+
+        TextField firstName = new TextField();
+        firstName.setPlaceholder("John");
+
+        TextField email = new TextField();
+        Checkbox doNotCall = new Checkbox("Do not call");
+
+        settingsFormLayout.addFormItem(firstName, "First name");
+        settingsFormLayout.addFormItem(email, "E-mail");
+//        FormLayout.FormItem phoneItem = settingsFormLayout.addFormItem(phone, "Phone");
+//        phoneItem.add(doNotCall);
+
+        VerticalLayout vLayoutMain = new VerticalLayout();
+        HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
+        HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
+        hLayoutWithButtons.add(openGrid, closeGrid, expandSelected);
+//        hLayoutTreeAndForm.add(nodeTreeGrid);
+        vLayoutMain.add(filter, nodeTreeGrid, hLayoutWithButtons);
+        add(vLayoutMain);
     }
 
     private void filterDataProvider(String text, TreeDataProvider<NodeDto> dataProvider) {
