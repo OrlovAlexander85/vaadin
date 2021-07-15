@@ -12,7 +12,7 @@ public class NodeDto {
     private NodeSettingsDto settings;
     private boolean isLeaf;
 
-    public NodeDto(String name, NodeDto parent, Boolean isLeaf) {
+    public NodeDto(String name, NodeDto parent, boolean isLeaf) {
         this.uuid = UUID.randomUUID();
         this.name = name;
         this.parent = parent;

@@ -18,5 +18,5 @@ public class NodeEntity {
     private NodeEntity parent;
     @OneToOne(cascade = CascadeType.ALL)
     private NodeSettingsEntity settings;
-    private Boolean isLeaf;
+    private boolean isLeaf;
 }
