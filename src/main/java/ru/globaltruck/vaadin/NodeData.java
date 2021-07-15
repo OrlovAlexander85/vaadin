@@ -51,7 +51,7 @@ public class NodeData {
                 .collect(Collectors.toList());
     }
 
-    public List<Node> getChildDepartments(Node parent, List<Node> nodeList) {
+    public List<Node> getChildNodes(Node parent, List<Node> nodeList) {
         return nodeList.stream()
                 .filter(node -> Objects.equals(node.getParent(), parent))
                 .collect(Collectors.toList());

@@ -4,8 +4,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.json.JSONObject;
 import org.json.XML;
@@ -26,6 +30,7 @@ public class MainView extends VerticalLayout {
     private final Button openGrid = new Button("Развернуть все");
     private final Button closeGrid = new Button("Свернуть все");
     private final Button expandSelected = new Button("Развернуть выбранную");
+    private final TextField filter = new TextField();
 
     public MainView(NodeData nodeData) throws FileNotFoundException {
         this.nodeData = nodeData;
@@ -38,14 +43,15 @@ public class MainView extends VerticalLayout {
         List<Node> nodeList = new ArrayList<>();
         this.nodeData.update(nodeList, objectAtr);
         this.nodeData.update(nodeList, objectSel);
-
-
         List<Node> rootNodes = this.nodeData.getRootNods(nodeList);
-        nodeTreeGrid.setItems(rootNodes,
-            parent -> this.nodeData.getChildDepartments(parent, nodeList));
 
+        TreeData<Node> treeData = new TreeData<>();
+        treeData.addItems(null, rootNodes);
+        nodeList.forEach(node -> treeData.addItems(node, nodeData.getChildNodes(node, nodeList)));
+        TreeDataProvider<Node> dataProvider = new TreeDataProvider<>(treeData);
+        nodeTreeGrid.setDataProvider(dataProvider);
         nodeTreeGrid.addHierarchyColumn(Node::getName)
-            .setHeader("Node Name");
+            .setHeader("Внешние системы");
 
         // Развернуть все ноды
         openGrid.addClickListener(event -> {
@@ -76,8 +82,17 @@ public class MainView extends VerticalLayout {
             nodeSelected.clear();
         });
 
+        // Окно ввода текста для поиска по дереву
+        filter.setPlaceholder("Фильтр по названию");
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
+
         HorizontalLayout hLayout = new HorizontalLayout();
         hLayout.add(openGrid, closeGrid, expandSelected);
-        add(nodeTreeGrid, hLayout);
+        add(filter, nodeTreeGrid, hLayout);
+    }
+
+    private void filterDataProvider(String text, TreeDataProvider<Node> dataProvider) {
+        dataProvider.setFilter(node -> node.getName().toLowerCase().contains(text.toLowerCase()));
     }
 }
