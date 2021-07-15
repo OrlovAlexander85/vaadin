@@ -14,12 +14,14 @@ import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Route
+@Slf4j
 public class MainView extends VerticalLayout {
     private final NodeService nodeService;
 
@@ -65,6 +67,23 @@ public class MainView extends VerticalLayout {
         // Выпадушка: тип поля
         Select<FieldType> fieldTypeSelect = getFieldTypeSelect();
 
+        nodeTreeGrid.addSelectionListener(selectionEvent -> {
+            NodeDto nodeDto = selectionEvent.getFirstSelectedItem().orElseThrow();
+            NodeSettingsDto settings = nodeDto.getSettings();
+
+            if (nodeDto.isLeaf()) {
+                if (settings != null) {
+                    nameTextField.setValue(settings.getHumanReadableName());
+                    activeCheckbox.setValue(settings.isActive());
+                    fieldTypeSelect.setValue(settings.getType());
+                }else {
+                    nameTextField.setValue("");
+                    activeCheckbox.setValue(false);
+                    fieldTypeSelect.setValue(null);
+                }
+            }
+        });
+
         saveSettingsButton.addClickListener(event -> {
             NodeSettingsDto settingsDto = new NodeSettingsDto();
             settingsDto.setType(fieldTypeSelect.getValue());
@@ -73,7 +92,9 @@ public class MainView extends VerticalLayout {
             nodeService.saveSettings();
         });
 
+
         settingsFormLayout.add(saveSettingsButton);
+
 
         VerticalLayout vLayoutMain = new VerticalLayout();
         HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
@@ -121,15 +142,15 @@ public class MainView extends VerticalLayout {
         TreeDataProvider<NodeDto> dataProvider = new TreeDataProvider<>(treeData);
         nodeTreeGrid.setDataProvider(dataProvider);
         nodeTreeGrid.addHierarchyColumn(NodeDto::getName)
-            .setHeader("Внешние системы");
+                .setHeader("Внешние системы");
         return dataProvider;
     }
 
     private void expandAllNodes() {
         openGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
-                .getDataProvider()
-                .fetchChildren(new HierarchicalQuery<>(null, null));
+                    .getDataProvider()
+                    .fetchChildren(new HierarchicalQuery<>(null, null));
             nodeTreeGrid.expandRecursively(rootNodes2, 4);
         });
     }
@@ -137,8 +158,8 @@ public class MainView extends VerticalLayout {
     private void rollUpAllNodes() {
         closeGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
-                .getDataProvider()
-                .fetchChildren(new HierarchicalQuery<>(null, null));
+                    .getDataProvider()
+                    .fetchChildren(new HierarchicalQuery<>(null, null));
             nodeTreeGrid.collapseRecursively(rootNodes2, 4);
         });
     }

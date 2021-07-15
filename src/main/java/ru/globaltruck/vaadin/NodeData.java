@@ -16,7 +16,7 @@ public class NodeData {
 
         Map<String, Object> stringObjectMap = jsonObject.toMap();
         for (String keyParent : stringObjectMap.keySet()) {
-            nodeDtoList.add(new NodeDto(keyParent, null));
+            nodeDtoList.add(new NodeDto(keyParent, null, false));
             addChildrenRecursion(nodeDtoList, stringObjectMap, keyParent);
         }
 
@@ -30,9 +30,9 @@ public class NodeData {
             Map<String, Object> childMap = (Map<String, Object>) childObject;
             for (String childKey : childMap.keySet()) {
                 if (!(childMap.get(childKey) instanceof HashMap) && !(childMap.get(childKey) instanceof ArrayList)) {
-                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex)));
+                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true));
                 } else {
-                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex)));
+                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false));
                 }
                 addChildrenRecursion(nodeDtoList, childMap, childKey);
             }
@@ -41,9 +41,9 @@ public class NodeData {
             Map<String, Object> childMap = childList.get(0);
             for (String childKey : childMap.keySet()) {
                 if (!(childMap.get(childKey) instanceof HashMap)) {
-                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex)));
+                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true));
                 } else
-                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex)));
+                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false));
                 addChildrenRecursion(nodeDtoList, childMap, childKey);
             }
         }
