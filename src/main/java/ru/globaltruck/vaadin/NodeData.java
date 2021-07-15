@@ -54,7 +54,7 @@ public class NodeData {
         return childKey + " : " + (childValue.length() > 30 ? childValue.substring(0, 30) : childValue);
     }
 
-    public List<NodeDto> getRootNods(List<NodeDto> nodeDtoList) {
+    public List<NodeDto> getRootNodes(List<NodeDto> nodeDtoList) {
         return nodeDtoList.stream()
                 .filter(nodeDto -> nodeDto.getParent() == null)
                 .collect(Collectors.toList());

@@ -40,64 +40,31 @@ public class MainView extends VerticalLayout {
 
         List<NodeDto> nodeDtoList = nodeService.findAll();
 
-        List<NodeDto> rootNodeDtos = this.nodeData.getRootNods(nodeDtoList);
+        List<NodeDto> rootNodeDtos = this.nodeData.getRootNodes(nodeDtoList);
 
-        TreeData<NodeDto> treeData = new TreeData<>();
-        treeData.addItems(null, rootNodeDtos);
-        nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
-        TreeDataProvider<NodeDto> dataProvider = new TreeDataProvider<>(treeData);
-        nodeTreeGrid.setDataProvider(dataProvider);
-        nodeTreeGrid.addHierarchyColumn(NodeDto::getName)
-            .setHeader("Внешние системы");
+        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodeDtos);
 
         // Развернуть все ноды
-        openGridButton.addClickListener(event -> {
-            final Stream<NodeDto> rootNodes2 = nodeTreeGrid
-                .getDataProvider()
-                .fetchChildren(new HierarchicalQuery<>(null, null));
-            nodeTreeGrid.expandRecursively(rootNodes2, 4);
-        });
+        expandAllNodes();
 
         // Свернуть все ноды
-        closeGridButton.addClickListener(event -> {
-            final Stream<NodeDto> rootNodes2 = nodeTreeGrid
-                .getDataProvider()
-                .fetchChildren(new HierarchicalQuery<>(null, null));
-            nodeTreeGrid.collapseRecursively(rootNodes2, 4);
-        });
+        rollUpAllNodes();
 
         // Развернуть выбранную ноду
-        List<NodeDto> nodeDtoSelected = new ArrayList<>();
-        nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        nodeTreeGrid.addSelectionListener(selectionEvent -> {
-            nodeDtoSelected.clear();
-            nodeDtoSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
-        });
-
-        expandSelectedButton.addClickListener(event -> {
-            nodeTreeGrid.expandRecursively(nodeDtoSelected, 10);
-            nodeDtoSelected.clear();
-        });
+        expandSelectedNode();
 
         // Окно ввода текста для поиска по дереву
-        filterTextField.setPlaceholder("Фильтр по названию");
-        filterTextField.setValueChangeMode(ValueChangeMode.EAGER);
-        filterTextField.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
+        filterByName(dataProvider);
 
-        // Форма с настройками
+        // Форма ввода имени
+        TextField nameTextField = getTextField();
 
-        TextField nameTextField = new TextField();
-        nameTextField.setPlaceholder("Имя");
+        // Чекбокс вкл/выкл
+        Checkbox activeCheckbox = getCheckbox();
 
-        Checkbox activeCheckbox = new Checkbox();
+        // Выпадушка: тип поля
+        Select<FieldType> fieldTypeSelect = getFieldTypeSelect();
 
-        Select<FieldType> fieldTypeSelect = new Select<>();
-        fieldTypeSelect.setItemLabelGenerator(FieldType::name);
-        fieldTypeSelect.setItems(FieldType.values());
-
-        settingsFormLayout.addFormItem(nameTextField, "Имя");
-        settingsFormLayout.addFormItem(fieldTypeSelect, "Тип поля");
-        settingsFormLayout.addFormItem(activeCheckbox, "Вкл/Выкл");
         saveSettingsButton.addClickListener(event -> {
             NodeSettingsDto settingsDto = new NodeSettingsDto();
             settingsDto.setType(fieldTypeSelect.getValue());
@@ -118,6 +85,76 @@ public class MainView extends VerticalLayout {
         hLayoutTreeAndForm.add(nodeTreeGrid, vLayoutForm);
         vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
         add(vLayoutMain);
+    }
+
+    private Select<FieldType> getFieldTypeSelect() {
+        Select<FieldType> fieldTypeSelect = new Select<>();
+        fieldTypeSelect.setItemLabelGenerator(FieldType::name);
+        fieldTypeSelect.setItems(FieldType.values());
+        settingsFormLayout.addFormItem(fieldTypeSelect, "Тип поля");
+        return fieldTypeSelect;
+    }
+
+    private Checkbox getCheckbox() {
+        Checkbox activeCheckbox = new Checkbox();
+        settingsFormLayout.addFormItem(activeCheckbox, "Вкл/Выкл");
+        return activeCheckbox;
+    }
+
+    private TextField getTextField() {
+        TextField nameTextField = new TextField();
+        nameTextField.setPlaceholder("Имя");
+        settingsFormLayout.addFormItem(nameTextField, "Имя");
+        return nameTextField;
+    }
+
+    private void filterByName(TreeDataProvider<NodeDto> dataProvider) {
+        filterTextField.setPlaceholder("Фильтр по названию");
+        filterTextField.setValueChangeMode(ValueChangeMode.EAGER);
+        filterTextField.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
+    }
+
+    private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodeDtos) {
+        TreeData<NodeDto> treeData = new TreeData<>();
+        treeData.addItems(null, rootNodeDtos);
+        nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
+        TreeDataProvider<NodeDto> dataProvider = new TreeDataProvider<>(treeData);
+        nodeTreeGrid.setDataProvider(dataProvider);
+        nodeTreeGrid.addHierarchyColumn(NodeDto::getName)
+            .setHeader("Внешние системы");
+        return dataProvider;
+    }
+
+    private void expandAllNodes() {
+        openGridButton.addClickListener(event -> {
+            final Stream<NodeDto> rootNodes2 = nodeTreeGrid
+                .getDataProvider()
+                .fetchChildren(new HierarchicalQuery<>(null, null));
+            nodeTreeGrid.expandRecursively(rootNodes2, 4);
+        });
+    }
+
+    private void rollUpAllNodes() {
+        closeGridButton.addClickListener(event -> {
+            final Stream<NodeDto> rootNodes2 = nodeTreeGrid
+                .getDataProvider()
+                .fetchChildren(new HierarchicalQuery<>(null, null));
+            nodeTreeGrid.collapseRecursively(rootNodes2, 4);
+        });
+    }
+
+    private void expandSelectedNode() {
+        List<NodeDto> nodeDtoSelected = new ArrayList<>();
+        nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        nodeTreeGrid.addSelectionListener(selectionEvent -> {
+            nodeDtoSelected.clear();
+            nodeDtoSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
+        });
+
+        expandSelectedButton.addClickListener(event -> {
+            nodeTreeGrid.expandRecursively(nodeDtoSelected, 10);
+            nodeDtoSelected.clear();
+        });
     }
 
     private void filterDataProvider(String text, TreeDataProvider<NodeDto> dataProvider) {
