@@ -69,6 +69,7 @@ public class MainView extends VerticalLayout {
             nodeSelected.clear();
             nodeSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
         });
+
         expendSelected.addClickListener(event -> {
             nodeTreeGrid.expandRecursively(nodeSelected, 10);
             nodeSelected.clear();
