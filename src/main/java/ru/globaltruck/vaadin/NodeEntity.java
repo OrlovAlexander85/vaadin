@@ -1,9 +1,11 @@
 package ru.globaltruck.vaadin;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.util.UUID;
 
 @Entity
@@ -14,4 +16,6 @@ public class NodeEntity {
     private String name;
     @OneToOne(cascade = CascadeType.ALL)
     private NodeEntity parent;
+    @OneToOne(cascade = CascadeType.ALL)
+    private NodeSettingsEntity settings;
 }

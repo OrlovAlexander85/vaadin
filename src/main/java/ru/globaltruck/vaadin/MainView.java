@@ -6,6 +6,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
@@ -26,10 +27,12 @@ public class MainView extends VerticalLayout {
     private final NodeData nodeData;
 
     private final FormLayout settingsFormLayout = new FormLayout();
-    private final Button openGrid = new Button("Развернуть все");
-    private final Button closeGrid = new Button("Свернуть все");
-    private final Button expandSelected = new Button("Развернуть выбранную");
-    private final TextField filter = new TextField();
+    private final Button openGridButton = new Button("Развернуть все");
+    private final Button closeGridButton = new Button("Свернуть все");
+    private final Button expandSelectedButton = new Button("Развернуть выбранную");
+    private final Button saveSettingsButton = new Button("Сохранить");
+
+    private final TextField filterTextField = new TextField();
 
     public MainView(NodeRepository nodeRepository, NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
@@ -48,7 +51,7 @@ public class MainView extends VerticalLayout {
             .setHeader("Внешние системы");
 
         // Развернуть все ноды
-        openGrid.addClickListener(event -> {
+        openGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                 .getDataProvider()
                 .fetchChildren(new HierarchicalQuery<>(null, null));
@@ -56,7 +59,7 @@ public class MainView extends VerticalLayout {
         });
 
         // Свернуть все ноды
-        closeGrid.addClickListener(event -> {
+        closeGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                 .getDataProvider()
                 .fetchChildren(new HierarchicalQuery<>(null, null));
@@ -71,35 +74,49 @@ public class MainView extends VerticalLayout {
             nodeDtoSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
         });
 
-        expandSelected.addClickListener(event -> {
+        expandSelectedButton.addClickListener(event -> {
             nodeTreeGrid.expandRecursively(nodeDtoSelected, 10);
             nodeDtoSelected.clear();
         });
 
         // Окно ввода текста для поиска по дереву
-        filter.setPlaceholder("Фильтр по названию");
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
+        filterTextField.setPlaceholder("Фильтр по названию");
+        filterTextField.setValueChangeMode(ValueChangeMode.EAGER);
+        filterTextField.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
 
         // Форма с настройками
 
-        TextField firstName = new TextField();
-        firstName.setPlaceholder("John");
+        TextField nameTextField = new TextField();
+        nameTextField.setPlaceholder("Имя");
 
-        TextField email = new TextField();
-        Checkbox doNotCall = new Checkbox("Do not call");
+        Checkbox activeCheckbox = new Checkbox();
 
-        settingsFormLayout.addFormItem(firstName, "First name");
-        settingsFormLayout.addFormItem(email, "E-mail");
-//        FormLayout.FormItem phoneItem = settingsFormLayout.addFormItem(phone, "Phone");
-//        phoneItem.add(doNotCall);
+        Select<FieldType> fieldTypeSelect = new Select<>();
+        fieldTypeSelect.setItemLabelGenerator(FieldType::name);
+        fieldTypeSelect.setItems(FieldType.values());
+
+        settingsFormLayout.addFormItem(nameTextField, "Имя");
+        settingsFormLayout.addFormItem(fieldTypeSelect, "Тип поля");
+        settingsFormLayout.addFormItem(activeCheckbox, "Вкл/Выкл");
+        saveSettingsButton.addClickListener(event -> {
+            NodeSettingsDto settingsDto = new NodeSettingsDto();
+            settingsDto.setType(fieldTypeSelect.getValue());
+            settingsDto.setHumanReadableName(nameTextField.getValue());
+            settingsDto.setActive(activeCheckbox.getValue());
+            nodeService.saveSettings();
+        });
+
+        settingsFormLayout.add(saveSettingsButton);
 
         VerticalLayout vLayoutMain = new VerticalLayout();
         HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
+        VerticalLayout vLayoutForm = new VerticalLayout();
+        vLayoutForm.add(settingsFormLayout);
         HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
-        hLayoutWithButtons.add(openGrid, closeGrid, expandSelected);
-//        hLayoutTreeAndForm.add(nodeTreeGrid);
-        vLayoutMain.add(filter, nodeTreeGrid, hLayoutWithButtons);
+        hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
+        nodeTreeGrid.setWidth("100%");
+        hLayoutTreeAndForm.add(nodeTreeGrid, vLayoutForm);
+        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
         add(vLayoutMain);
     }
 

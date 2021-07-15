@@ -1,5 +1,6 @@
 package ru.globaltruck.vaadin;
 
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.json.XML;
@@ -11,16 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class NodeService {
     private final NodeData nodeData;
     private final NodeMapper nodeMapper;
     private final NodeRepository nodeRepository;
-
-    public NodeService(NodeData nodeData, NodeMapper nodeMapper, NodeRepository nodeRepository) {
-        this.nodeData = nodeData;
-        this.nodeMapper = nodeMapper;
-        this.nodeRepository = nodeRepository;
-    }
 
     @SneakyThrows
     void save(){
@@ -39,5 +35,9 @@ public class NodeService {
         return nodeRepository.findAll().stream()
                 .map(nodeMapper::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    public void saveSettings() {
+
     }
 }
