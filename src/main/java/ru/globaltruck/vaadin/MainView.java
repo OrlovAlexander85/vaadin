@@ -100,9 +100,15 @@ public class MainView extends VerticalLayout {
     }
 
     private void nodeTreeGreedListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, FormLayout settingsFormLayout) {
+        var ref = new Object() {
+            NodeDto nodeDtoSelected;
+        };
+
         nodeTreeGrid.addSelectionListener(selectionEvent -> {
             // Выбрал ноду
             selectionEvent.getFirstSelectedItem().ifPresent(nodeDto -> {
+
+                ref.nodeDtoSelected = nodeDto;
 
                 // Является ли листом
                 if (nodeDto.isLeaf()) {
@@ -122,28 +128,28 @@ public class MainView extends VerticalLayout {
                         activeCheckbox.clear();
                         fieldTypeSelect.clear();
                     }
-
-                    saveSettingsButton.addClickListener(event -> {
-                        NodeSettingsDto nodeSettingsDto;
-
-                        if (nodeDto.getSettings() != null) {
-                            nodeSettingsDto = nodeDto.getSettings();
-                        } else {
-                            nodeSettingsDto = new NodeSettingsDto();
-                            nodeSettingsDto.setId(UUID.randomUUID());
-                        }
-
-                        nodeSettingsDto.setType(fieldTypeSelect.getValue());
-                        nodeSettingsDto.setHumanReadableName(nameTextField.getValue());
-                        nodeSettingsDto.setActive(activeCheckbox.getValue());
-                        nodeDto.setSettings(nodeSettingsDto);
-                        nodeService.save(nodeDto);
-                        log.info("Saved: " + nodeDto);
-                    });
                 } else {
                     settingsFormLayout.setVisible(false);
                 }
             });
+        });
+
+        saveSettingsButton.addClickListener(event -> {
+            NodeSettingsDto nodeSettingsDto;
+
+            if (ref.nodeDtoSelected.getSettings() != null) {
+                nodeSettingsDto = ref.nodeDtoSelected.getSettings();
+            } else {
+                nodeSettingsDto = new NodeSettingsDto();
+                nodeSettingsDto.setId(UUID.randomUUID());
+            }
+
+            nodeSettingsDto.setType(fieldTypeSelect.getValue());
+            nodeSettingsDto.setHumanReadableName(nameTextField.getValue());
+            nodeSettingsDto.setActive(activeCheckbox.getValue());
+            ref.nodeDtoSelected.setSettings(nodeSettingsDto);
+            nodeService.save(ref.nodeDtoSelected);
+            log.info("Saved: " + ref.nodeDtoSelected);
         });
     }
 
