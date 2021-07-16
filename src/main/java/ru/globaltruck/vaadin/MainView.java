@@ -24,11 +24,9 @@ import java.util.stream.Stream;
 @Slf4j
 public class MainView extends VerticalLayout {
     private final NodeService nodeService;
-
-    private final TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
     private final NodeData nodeData;
 
-    private final FormLayout settingsFormLayout = new FormLayout();
+    private final TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
     private final Button openGridButton = new Button("Развернуть все");
     private final Button closeGridButton = new Button("Свернуть все");
     private final Button expandSelectedButton = new Button("Развернуть выбранную");
@@ -39,6 +37,8 @@ public class MainView extends VerticalLayout {
     public MainView(NodeRepository nodeRepository, NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
         this.nodeData = nodeData;
+
+        FormLayout settingsFormLayout = new FormLayout();
 
         List<NodeDto> nodeDtoList = nodeService.findAll();
 
@@ -59,31 +59,46 @@ public class MainView extends VerticalLayout {
         filterByName(dataProvider);
 
         // Форма ввода имени
-        TextField nameTextField = getTextField();
+        TextField nameTextField = createTextField(settingsFormLayout);
+        settingsFormLayout.addFormItem(nameTextField, "Имя");
 
         // Чекбокс вкл/выкл
-        Checkbox activeCheckbox = getCheckbox();
+        Checkbox activeCheckbox = new Checkbox();
+        settingsFormLayout.addFormItem(activeCheckbox, "Вкл/Выкл");
 
         // Выпадушка: тип поля
-        Select<FieldType> fieldTypeSelect = getFieldTypeSelect();
+        Select<FieldType> fieldTypeSelect = createFieldTypeSelect(settingsFormLayout);
+        settingsFormLayout.addFormItem(fieldTypeSelect, "Тип поля");
 
-        nodeTreeGrid.addSelectionListener(selectionEvent -> {
-            NodeDto nodeDto = selectionEvent.getFirstSelectedItem().orElseThrow();
-            NodeSettingsDto settings = nodeDto.getSettings();
+        // Кнопка сохранить
+        settingsFormLayout.addFormItem(saveSettingsButton, "Сохранить");
 
-            if (nodeDto.isLeaf()) {
-                if (settings != null) {
-                    nameTextField.setValue(settings.getHumanReadableName());
-                    activeCheckbox.setValue(settings.isActive());
-                    fieldTypeSelect.setValue(settings.getType());
-                }else {
-                    nameTextField.setValue("");
-                    activeCheckbox.setValue(false);
-                    fieldTypeSelect.setValue(null);
-                }
-            }
-        });
+        // Слушатель три грида
+        nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout);
 
+        // Слушатель кнопки сохранить настройки
+//        saveSettingsButtonListener(nodeService, nameTextField, activeCheckbox, fieldTypeSelect);
+
+        HorizontalLayout hLayoutTreeAndForm = createHorizontalLayout(settingsFormLayout);
+
+        HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
+        hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
+
+        VerticalLayout vLayoutMain = new VerticalLayout();
+        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
+
+        add(vLayoutMain);
+    }
+
+    private HorizontalLayout createHorizontalLayout(FormLayout settingsFormLayout) {
+        HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
+        hLayoutTreeAndForm.setWidthFull();
+        hLayoutTreeAndForm.add(nodeTreeGrid);
+        hLayoutTreeAndForm.add(settingsFormLayout);
+        return hLayoutTreeAndForm;
+    }
+
+    private void saveSettingsButtonListener(NodeService nodeService, TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect) {
         saveSettingsButton.addClickListener(event -> {
             NodeSettingsDto settingsDto = new NodeSettingsDto();
             settingsDto.setType(fieldTypeSelect.getValue());
@@ -91,41 +106,40 @@ public class MainView extends VerticalLayout {
             settingsDto.setActive(activeCheckbox.getValue());
             nodeService.saveSettings();
         });
-
-
-        settingsFormLayout.add(saveSettingsButton);
-
-
-        VerticalLayout vLayoutMain = new VerticalLayout();
-        HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
-        VerticalLayout vLayoutForm = new VerticalLayout();
-        vLayoutForm.add(settingsFormLayout);
-        HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
-        hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
-        nodeTreeGrid.setWidth("100%");
-        hLayoutTreeAndForm.add(nodeTreeGrid, vLayoutForm);
-        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
-        add(vLayoutMain);
     }
 
-    private Select<FieldType> getFieldTypeSelect() {
+    private void nodeTreeGreedListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, FormLayout settingsFormLayout) {
+        nodeTreeGrid.addSelectionListener(selectionEvent -> {
+            NodeDto nodeDto = selectionEvent.getFirstSelectedItem().orElseThrow();
+            NodeSettingsDto settings = nodeDto.getSettings();
+
+            if (nodeDto.isLeaf()) {
+                settingsFormLayout.setVisible(true);
+                if (settings != null) {
+                    nameTextField.setValue(settings.getHumanReadableName());
+                    activeCheckbox.setValue(settings.isActive());
+                    fieldTypeSelect.setValue(settings.getType());
+                } else {
+                    nameTextField.setValue("");
+                    activeCheckbox.setValue(false);
+                    fieldTypeSelect.setValue(null);
+                }
+            } else {
+                settingsFormLayout.setVisible(false);
+            }
+        });
+    }
+
+    private Select<FieldType> createFieldTypeSelect(FormLayout settingsFormLayout) {
         Select<FieldType> fieldTypeSelect = new Select<>();
         fieldTypeSelect.setItemLabelGenerator(FieldType::name);
         fieldTypeSelect.setItems(FieldType.values());
-        settingsFormLayout.addFormItem(fieldTypeSelect, "Тип поля");
         return fieldTypeSelect;
     }
 
-    private Checkbox getCheckbox() {
-        Checkbox activeCheckbox = new Checkbox();
-        settingsFormLayout.addFormItem(activeCheckbox, "Вкл/Выкл");
-        return activeCheckbox;
-    }
-
-    private TextField getTextField() {
+    private TextField createTextField(FormLayout settingsFormLayout) {
         TextField nameTextField = new TextField();
         nameTextField.setPlaceholder("Имя");
-        settingsFormLayout.addFormItem(nameTextField, "Имя");
         return nameTextField;
     }
 
