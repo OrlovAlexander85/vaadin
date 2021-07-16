@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Route
@@ -47,13 +48,13 @@ public class MainView extends VerticalLayout {
         TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodeDtos);
 
         // Развернуть все ноды
-        expandAllNodes();
+        expandAllNodesListener();
 
         // Свернуть все ноды
-        rollUpAllNodes();
+        rollUpAllNodesListener();
 
         // Развернуть выбранную ноду
-        expandSelectedNode();
+        expandSelectedNodeListener();
 
         // Окно ввода текста для поиска по дереву
         filterByName(dataProvider);
@@ -98,35 +99,51 @@ public class MainView extends VerticalLayout {
         return hLayoutTreeAndForm;
     }
 
-    private void saveSettingsButtonListener(NodeService nodeService, TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect) {
-        saveSettingsButton.addClickListener(event -> {
-            NodeSettingsDto settingsDto = new NodeSettingsDto();
-            settingsDto.setType(fieldTypeSelect.getValue());
-            settingsDto.setHumanReadableName(nameTextField.getValue());
-            settingsDto.setActive(activeCheckbox.getValue());
-            nodeService.saveSettings();
-        });
-    }
-
     private void nodeTreeGreedListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, FormLayout settingsFormLayout) {
         nodeTreeGrid.addSelectionListener(selectionEvent -> {
-            NodeDto nodeDto = selectionEvent.getFirstSelectedItem().orElseThrow();
-            NodeSettingsDto settings = nodeDto.getSettings();
+            // Выбрал ноду
+            selectionEvent.getFirstSelectedItem().ifPresent(nodeDto -> {
 
-            if (nodeDto.isLeaf()) {
-                settingsFormLayout.setVisible(true);
-                if (settings != null) {
-                    nameTextField.setValue(settings.getHumanReadableName());
-                    activeCheckbox.setValue(settings.isActive());
-                    fieldTypeSelect.setValue(settings.getType());
+                // Является ли листом
+                if (nodeDto.isLeaf()) {
+                    // Включить видимость
+                    settingsFormLayout.setVisible(true);
+
+                    // Если есть
+                    if (nodeDto.getSettings() != null) {
+                        NodeSettingsDto nodeSettingsDto = nodeDto.getSettings();
+                        nameTextField.setValue(nodeSettingsDto.getHumanReadableName());
+                        activeCheckbox.setValue(nodeSettingsDto.isActive());
+                        fieldTypeSelect.setValue(nodeSettingsDto.getType());
+                    }
+                    // Если нету
+                    else {
+                        nameTextField.clear();
+                        activeCheckbox.clear();
+                        fieldTypeSelect.clear();
+                    }
+
+                    saveSettingsButton.addClickListener(event -> {
+                        NodeSettingsDto nodeSettingsDto;
+
+                        if (nodeDto.getSettings() != null) {
+                            nodeSettingsDto = nodeDto.getSettings();
+                        } else {
+                            nodeSettingsDto = new NodeSettingsDto();
+                            nodeSettingsDto.setId(UUID.randomUUID());
+                        }
+
+                        nodeSettingsDto.setType(fieldTypeSelect.getValue());
+                        nodeSettingsDto.setHumanReadableName(nameTextField.getValue());
+                        nodeSettingsDto.setActive(activeCheckbox.getValue());
+                        nodeDto.setSettings(nodeSettingsDto);
+                        nodeService.save(nodeDto);
+                        log.info("Saved: " + nodeDto);
+                    });
                 } else {
-                    nameTextField.setValue("");
-                    activeCheckbox.setValue(false);
-                    fieldTypeSelect.setValue(null);
+                    settingsFormLayout.setVisible(false);
                 }
-            } else {
-                settingsFormLayout.setVisible(false);
-            }
+            });
         });
     }
 
@@ -149,7 +166,8 @@ public class MainView extends VerticalLayout {
         filterTextField.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
     }
 
-    private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodeDtos) {
+    private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData
+                                                                         nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodeDtos) {
         TreeData<NodeDto> treeData = new TreeData<>();
         treeData.addItems(null, rootNodeDtos);
         nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
@@ -160,7 +178,7 @@ public class MainView extends VerticalLayout {
         return dataProvider;
     }
 
-    private void expandAllNodes() {
+    private void expandAllNodesListener() {
         openGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                     .getDataProvider()
@@ -169,7 +187,7 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private void rollUpAllNodes() {
+    private void rollUpAllNodesListener() {
         closeGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                     .getDataProvider()
@@ -178,12 +196,12 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private void expandSelectedNode() {
+    private void expandSelectedNodeListener() {
         List<NodeDto> nodeDtoSelected = new ArrayList<>();
         nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         nodeTreeGrid.addSelectionListener(selectionEvent -> {
             nodeDtoSelected.clear();
-            nodeDtoSelected.add(selectionEvent.getFirstSelectedItem().orElseThrow());
+            selectionEvent.getFirstSelectedItem().ifPresent(nodeDtoSelected::add);
         });
 
         expandSelectedButton.addClickListener(event -> {

@@ -37,7 +37,8 @@ public class NodeService {
                 .collect(Collectors.toList());
     }
 
-    public void saveSettings() {
-
+    public void save(NodeDto nodeDto) {
+        NodeEntity nodeEntity = nodeMapper.mapToEntity(nodeDto);
+        nodeRepository.save(nodeEntity);
     }
 }
