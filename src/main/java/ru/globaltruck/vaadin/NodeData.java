@@ -30,7 +30,7 @@ public class NodeData {
             Map<String, Object> childMap = (Map<String, Object>) childObject;
             for (String childKey : childMap.keySet()) {
                 if (!(childMap.get(childKey) instanceof HashMap) && !(childMap.get(childKey) instanceof ArrayList)) {
-                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true, source));
+                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex), true, source, getExample(childMap, childKey)));
                 } else {
                     nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false, source));
                 }
@@ -41,7 +41,7 @@ public class NodeData {
             Map<String, Object> childMap = childList.get(0);
             for (String childKey : childMap.keySet()) {
                 if (!(childMap.get(childKey) instanceof HashMap)) {
-                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true, source));
+                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex), true, source, getExample(childMap, childKey)));
                 } else
                     nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false, source));
                 addChildrenRecursion(nodeDtoList, childMap, childKey, source);
@@ -49,9 +49,9 @@ public class NodeData {
         }
     }
 
-    private String getName(Map<String, Object> childMap, String childKey) {
+    private String getExample(Map<String, Object> childMap, String childKey) {
         String childValue = childMap.get(childKey).toString();
-        return childKey + " : " + (childValue.length() > 30 ? childValue.substring(0, 30) : childValue);
+        return childValue.length() > 30 ? childValue.substring(0, 30) : childValue;
     }
 
     public List<NodeDto> getRootNodes(List<NodeDto> nodeDtoList) {

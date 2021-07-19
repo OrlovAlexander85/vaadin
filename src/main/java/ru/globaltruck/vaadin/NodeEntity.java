@@ -1,6 +1,7 @@
 package ru.globaltruck.vaadin;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class NodeEntity {
     @Id
@@ -20,4 +22,5 @@ public class NodeEntity {
     private NodeSettingsEntity settings;
     private boolean isLeaf;
     private String source;
+    private String example;
 }
