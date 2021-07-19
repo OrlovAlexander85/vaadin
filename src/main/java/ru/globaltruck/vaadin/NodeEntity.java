@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.util.UUID;
 
-@Entity
 @Data
+@Entity
 public class NodeEntity {
     @Id
     private UUID uuid;
@@ -19,4 +19,5 @@ public class NodeEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private NodeSettingsEntity settings;
     private boolean isLeaf;
+    private String source;
 }

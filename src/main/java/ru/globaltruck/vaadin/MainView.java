@@ -1,7 +1,9 @@
 package ru.globaltruck.vaadin;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -130,6 +132,9 @@ public class MainView extends VerticalLayout {
             });
         });
 
+        Dialog dialog = new Dialog();
+        dialog.add(new Text("Настройки сохранены"));
+
         saveSettingsButton.addClickListener(event -> {
             NodeSettingsDto nodeSettingsDto;
 
@@ -146,6 +151,7 @@ public class MainView extends VerticalLayout {
             ref.nodeDtoSelected.setSettings(nodeSettingsDto);
             nodeService.save(ref.nodeDtoSelected);
             log.info("Saved: " + ref.nodeDtoSelected);
+            dialog.open();
         });
     }
 

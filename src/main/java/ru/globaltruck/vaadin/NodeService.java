@@ -22,9 +22,10 @@ public class NodeService {
     void save(){
 //        Reader xmlSourceAtr = new FileReader("src/main/resources/Atrucks.xml");
         Reader xmlSourceSel = new FileReader("src/main/resources/Selta.xml");
+        String source = "selta";
 //        JSONObject objectAtr = XML.toJSONObject(xmlSourceAtr);
         JSONObject objectSel = XML.toJSONObject(xmlSourceSel);
-        List<NodeDto> nodeDtos = nodeData.createNodeList(objectSel);
+        List<NodeDto> nodeDtos = nodeData.createNodeList(objectSel, source);
         List<NodeEntity> nodeEntities = nodeDtos.stream()
                 .map(nodeMapper::mapToEntity)
                 .collect(Collectors.toList());

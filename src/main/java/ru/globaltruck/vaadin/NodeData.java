@@ -11,40 +11,40 @@ import java.util.stream.Collectors;
 public class NodeData {
 
     @SneakyThrows
-    public List<NodeDto> createNodeList(JSONObject jsonObject) {
+    public List<NodeDto> createNodeList(JSONObject jsonObject, String source) {
         List<NodeDto> nodeDtoList = new ArrayList<>();
 
         Map<String, Object> stringObjectMap = jsonObject.toMap();
         for (String keyParent : stringObjectMap.keySet()) {
-            nodeDtoList.add(new NodeDto(keyParent, null, false));
-            addChildrenRecursion(nodeDtoList, stringObjectMap, keyParent);
+            nodeDtoList.add(new NodeDto(keyParent, null, false, source));
+            addChildrenRecursion(nodeDtoList, stringObjectMap, keyParent, source);
         }
 
         return nodeDtoList;
     }
 
-    private void addChildrenRecursion(List<NodeDto> nodeDtoList, Map<String, Object> objectMap, String keyParent) {
+    private void addChildrenRecursion(List<NodeDto> nodeDtoList, Map<String, Object> objectMap, String keyParent, String source) {
         int parentIndex = nodeDtoList.size() - 1;
         Object childObject = objectMap.get(keyParent);
         if (childObject instanceof HashMap) {
             Map<String, Object> childMap = (Map<String, Object>) childObject;
             for (String childKey : childMap.keySet()) {
                 if (!(childMap.get(childKey) instanceof HashMap) && !(childMap.get(childKey) instanceof ArrayList)) {
-                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true));
+                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true, source));
                 } else {
-                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false));
+                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false, source));
                 }
-                addChildrenRecursion(nodeDtoList, childMap, childKey);
+                addChildrenRecursion(nodeDtoList, childMap, childKey, source);
             }
         } else if (childObject instanceof ArrayList) {
             List<Map<String, Object>> childList = (List<Map<String, Object>>) childObject;
             Map<String, Object> childMap = childList.get(0);
             for (String childKey : childMap.keySet()) {
                 if (!(childMap.get(childKey) instanceof HashMap)) {
-                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true));
+                    nodeDtoList.add(new NodeDto(getName(childMap, childKey), nodeDtoList.get(parentIndex), true, source));
                 } else
-                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false));
-                addChildrenRecursion(nodeDtoList, childMap, childKey);
+                    nodeDtoList.add(new NodeDto(childKey, nodeDtoList.get(parentIndex),false, source));
+                addChildrenRecursion(nodeDtoList, childMap, childKey, source);
             }
         }
     }
