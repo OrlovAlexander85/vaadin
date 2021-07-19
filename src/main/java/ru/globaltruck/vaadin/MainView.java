@@ -27,7 +27,6 @@ public class MainView extends VerticalLayout {
     private final NodeService nodeService;
     private final NodeData nodeData;
 
-    private final TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
     private final Button openGridButton = new Button("Развернуть все");
     private final Button closeGridButton = new Button("Свернуть все");
     private final Button expandSelectedButton = new Button("Развернуть выбранную");
@@ -39,27 +38,29 @@ public class MainView extends VerticalLayout {
         this.nodeService = nodeService;
         this.nodeData = nodeData;
 
+        TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
+
         List<NodeDto> nodeDtoList = nodeService.findAll();
 
         List<NodeDto> rootNodes = this.nodeData.getRootNodes(nodeDtoList);
 
-        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodes);
+        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodes, nodeTreeGrid);
 
         // Развернуть все ноды
-        expandAllNodesListener();
+        expandAllNodesListener(nodeTreeGrid);
 
         // Свернуть все ноды
-        rollUpAllNodesListener();
+        rollUpAllNodesListener(nodeTreeGrid);
 
         // Развернуть выбранную ноду
-        expandSelectedNodeListener();
+        expandSelectedNodeListener(nodeTreeGrid);
 
         // Окно ввода текста для поиска по дереву
         filterByName(dataProvider);
 
-        FormLayout settingsFormLayout = createSettingsFormLayout();
+        VerticalLayout settingsFormLayout = createSettingsFormLayout(nodeTreeGrid);
 
-        HorizontalLayout hLayoutTreeAndForm = createTreeAndFormLayout(settingsFormLayout);
+        HorizontalLayout hLayoutTreeAndForm = createTreeAndFormLayout(settingsFormLayout, nodeTreeGrid);
 
         HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
         hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
@@ -70,38 +71,31 @@ public class MainView extends VerticalLayout {
         add(vLayoutMain);
     }
 
-    private FormLayout createSettingsFormLayout() {
-        FormLayout settingsFormLayout = new FormLayout();
-
+    private VerticalLayout createSettingsFormLayout(TreeGrid<NodeDto> nodeTreeGrid) {
         // Форма ввода имени
-        TextField nameTextField = createTextField(settingsFormLayout);
-        settingsFormLayout.addFormItem(nameTextField, "Имя");
+        TextField nameTextField = createTextField();
 
         // Чекбокс вкл/выкл
-        Checkbox activeCheckbox = new Checkbox();
-        settingsFormLayout.addFormItem(activeCheckbox, "Вкл/Выкл");
+        Checkbox activeCheckbox = new Checkbox("Вкл/выкл");
 
         // Выпадушка: тип поля
-        Select<FieldType> fieldTypeSelect = createFieldTypeSelect(settingsFormLayout);
-        settingsFormLayout.addFormItem(fieldTypeSelect, "Тип поля");
+        Select<FieldType> fieldTypeSelect = createFieldTypeSelect();
 
-        // Кнопка сохранить
-        settingsFormLayout.addFormItem(saveSettingsButton, "Сохранить");
+        VerticalLayout settingsFormLayout = new VerticalLayout(nameTextField, activeCheckbox, fieldTypeSelect, saveSettingsButton);
 
         // Слушатель три грида
-        nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout);
+        nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout, nodeTreeGrid);
         return settingsFormLayout;
     }
 
-    private HorizontalLayout createTreeAndFormLayout(FormLayout settingsFormLayout) {
-        HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
-        hLayoutTreeAndForm.setWidthFull();
-        hLayoutTreeAndForm.add(nodeTreeGrid);
-        hLayoutTreeAndForm.add(settingsFormLayout);
-        return hLayoutTreeAndForm;
+    private HorizontalLayout createTreeAndFormLayout(VerticalLayout settingsFormLayout, TreeGrid<NodeDto> nodeTreeGrid) {
+        HorizontalLayout mainContent = new HorizontalLayout(nodeTreeGrid, settingsFormLayout);
+        mainContent.setWidthFull();
+        nodeTreeGrid.setWidthFull();
+        return mainContent;
     }
 
-    private void nodeTreeGreedListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, FormLayout settingsFormLayout) {
+    private void nodeTreeGreedListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, VerticalLayout settingsFormLayout, TreeGrid<NodeDto> nodeTreeGrid) {
         var ref = new Object() {
             NodeDto nodeDtoSelected;
         };
@@ -155,16 +149,17 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private Select<FieldType> createFieldTypeSelect(FormLayout settingsFormLayout) {
+    private Select<FieldType> createFieldTypeSelect() {
         Select<FieldType> fieldTypeSelect = new Select<>();
+        fieldTypeSelect.setLabel("Тип поля");
         fieldTypeSelect.setItemLabelGenerator(FieldType::name);
         fieldTypeSelect.setItems(FieldType.values());
         return fieldTypeSelect;
     }
 
-    private TextField createTextField(FormLayout settingsFormLayout) {
-        TextField nameTextField = new TextField();
-        nameTextField.setPlaceholder("Имя");
+    private TextField createTextField() {
+        TextField nameTextField = new TextField("Имя");
+        nameTextField.setPlaceholder("Название поля");
         return nameTextField;
     }
 
@@ -175,7 +170,7 @@ public class MainView extends VerticalLayout {
     }
 
     private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData
-                                                                         nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodeDtos) {
+                                                                         nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodeDtos, TreeGrid<NodeDto> nodeTreeGrid) {
         TreeData<NodeDto> treeData = new TreeData<>();
         treeData.addItems(null, rootNodeDtos);
         nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
@@ -186,7 +181,7 @@ public class MainView extends VerticalLayout {
         return dataProvider;
     }
 
-    private void expandAllNodesListener() {
+    private void expandAllNodesListener(TreeGrid<NodeDto> nodeTreeGrid) {
         openGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                     .getDataProvider()
@@ -195,7 +190,7 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private void rollUpAllNodesListener() {
+    private void rollUpAllNodesListener(TreeGrid<NodeDto> nodeTreeGrid) {
         closeGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                     .getDataProvider()
@@ -204,7 +199,7 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private void expandSelectedNodeListener() {
+    private void expandSelectedNodeListener(TreeGrid<NodeDto> nodeTreeGrid) {
         List<NodeDto> nodeDtoSelected = new ArrayList<>();
         nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         nodeTreeGrid.addSelectionListener(selectionEvent -> {
