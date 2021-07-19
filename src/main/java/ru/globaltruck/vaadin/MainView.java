@@ -5,6 +5,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.dnd.GridDropLocation;
+import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -33,6 +36,9 @@ public class MainView extends VerticalLayout {
     private final Button saveSettingsButton = new Button("Сохранить");
 
     private final TextField filterTextField = new TextField();
+
+    private NodeDto draggedNode;
+    private List<NodeDto> seltaNodes;
 
     public MainView(NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
@@ -67,14 +73,47 @@ public class MainView extends VerticalLayout {
         HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
         hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
 
-        Grid<NodeDto> nodeGrid = new Grid<>(NodeDto.class);
-        List<NodeDto> seltaNodes = nodeService.findActiveNodes("selta", true);
-        nodeGrid.setItems(seltaNodes);
-        nodeGrid.setColumns("name", "");
+        Grid<NodeDto> grid = new Grid<>(NodeDto.class);
+        seltaNodes = nodeService.findActiveNodes("selta", true);
+        grid.setItems(seltaNodes);
+        grid.setColumns("name", "example");
+        grid.setSortableColumns();
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        grid.setRowsDraggable(true);
+
+        grid.addDragStartListener(event -> {
+            draggedNode = event.getDraggedItems().get(0);
+            grid.setDropMode(GridDropMode.BETWEEN);
+        });
+
+        grid.addDragEndListener(
+                event -> {
+                    draggedNode = null;
+                    // Once dragging has ended, disable drop mode so that
+                    // it won't look like other dragged items can be dropped
+                    grid.setDropMode(null);
+                }
+        );
+
+        grid.addDropListener(
+                event -> {
+                    Optional<NodeDto> dropOverItem = event.getDropTargetItem();
+                    if (dropOverItem.isPresent() && !dropOverItem.get().equals(draggedNode)) {
+                        // reorder dragged item the backing gridItems container
+                        seltaNodes.remove(draggedNode);
+                        // calculate drop index based on the dropOverItem
+                        int dropIndex =
+                                seltaNodes.indexOf(dropOverItem.get()) + (event.getDropLocation() == GridDropLocation.BELOW ? 1 : 0);
+                        seltaNodes.add(dropIndex, draggedNode);
+                        grid.getDataProvider().refreshAll();
+                    }
+                }
+        );
+
 
         // Общий слой
         VerticalLayout vLayoutMain = new VerticalLayout();
-        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons, nodeGrid);
+        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons, grid);
 
         add(vLayoutMain);
     }
@@ -188,7 +227,9 @@ public class MainView extends VerticalLayout {
         nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
         TreeDataProvider<NodeDto> dataProvider = new TreeDataProvider<>(treeData);
         nodeTreeGrid.setDataProvider(dataProvider);
-        nodeTreeGrid.addHierarchyColumn(NodeDto::getName)
+        nodeTreeGrid.addHierarchyColumn(nodeDto ->
+                nodeDto.getName() + (nodeDto.getExample() == null ? "" : " : " + nodeDto.getExample())
+        )
                 .setHeader("Внешние системы");
         return dataProvider;
     }
