@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -27,7 +26,6 @@ import java.util.stream.Stream;
 @Slf4j
 public class MainView extends VerticalLayout {
     private final NodeService nodeService;
-    private final NodeData nodeData;
 
     private final Button openGridButton = new Button("Развернуть все");
     private final Button closeGridButton = new Button("Свернуть все");
@@ -38,13 +36,12 @@ public class MainView extends VerticalLayout {
 
     public MainView(NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
-        this.nodeData = nodeData;
 
         TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
 
         List<NodeDto> nodeDtoList = nodeService.findAll();
 
-        List<NodeDto> rootNodes = this.nodeData.getRootNodes(nodeDtoList);
+        List<NodeDto> rootNodes = nodeData.getRootNodes(nodeDtoList);
 
         TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodes, nodeTreeGrid);
 
@@ -176,9 +173,9 @@ public class MainView extends VerticalLayout {
     }
 
     private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData
-                                                                         nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodeDtos, TreeGrid<NodeDto> nodeTreeGrid) {
+                                                                         nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodes, TreeGrid<NodeDto> nodeTreeGrid) {
         TreeData<NodeDto> treeData = new TreeData<>();
-        treeData.addItems(null, rootNodeDtos);
+        treeData.addItems(null, rootNodes);
         nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
         TreeDataProvider<NodeDto> dataProvider = new TreeDataProvider<>(treeData);
         nodeTreeGrid.setDataProvider(dataProvider);
