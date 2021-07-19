@@ -38,6 +38,13 @@ public class NodeService {
                 .collect(Collectors.toList());
     }
 
+    List<NodeDto> findActiveNodes(String source, boolean active){
+        return nodeRepository.findAllBySourceAndSettings_Active(source, active)
+                .stream()
+                .map(nodeMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
     public void save(NodeDto nodeDto) {
         NodeEntity nodeEntity = nodeMapper.mapToEntity(nodeDto);
         nodeRepository.save(nodeEntity);

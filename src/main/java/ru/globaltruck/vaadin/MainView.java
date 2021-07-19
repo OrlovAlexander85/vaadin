@@ -39,11 +39,11 @@ public class MainView extends VerticalLayout {
 
         TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
 
-        List<NodeDto> nodeDtoList = nodeService.findAll();
+        List<NodeDto> nodeList = nodeService.findAll();
 
-        List<NodeDto> rootNodes = nodeData.getRootNodes(nodeDtoList);
+        List<NodeDto> rootNodes = nodeData.getRootNodes(nodeList);
 
-        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodes, nodeTreeGrid);
+        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeList, rootNodes, nodeTreeGrid);
 
         // Развернуть все ноды
         expandAllNodesListener(nodeTreeGrid);
@@ -57,15 +57,24 @@ public class MainView extends VerticalLayout {
         // Окно ввода текста для поиска по дереву
         filterByName(dataProvider);
 
+        // Слой настроек
         VerticalLayout settingsFormLayout = createSettingsFormLayout(nodeTreeGrid);
 
+        // Общий слой для настроек и дерева
         HorizontalLayout hLayoutTreeAndForm = createTreeAndFormLayout(settingsFormLayout, nodeTreeGrid);
 
+        // Слой для кнопок дерева
         HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
         hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
 
+        Grid<NodeDto> nodeGrid = new Grid<>(NodeDto.class);
+        List<NodeDto> seltaNodes = nodeService.findActiveNodes("selta", true);
+        nodeGrid.setItems(seltaNodes);
+        nodeGrid.setColumns("name", "");
+
+        // Общий слой
         VerticalLayout vLayoutMain = new VerticalLayout();
-        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
+        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons, nodeGrid);
 
         add(vLayoutMain);
     }
@@ -172,8 +181,8 @@ public class MainView extends VerticalLayout {
         filterTextField.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
     }
 
-    private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData
-                                                                         nodeData, List<NodeDto> nodeDtoList, List<NodeDto> rootNodes, TreeGrid<NodeDto> nodeTreeGrid) {
+    private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData nodeData, List<NodeDto> nodeDtoList,
+                                                                 List<NodeDto> rootNodes, TreeGrid<NodeDto> nodeTreeGrid) {
         TreeData<NodeDto> treeData = new TreeData<>();
         treeData.addItems(null, rootNodes);
         nodeDtoList.forEach(nodeDto -> treeData.addItems(nodeDto, nodeData.getChildNodes(nodeDto, nodeDtoList)));
