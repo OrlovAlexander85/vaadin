@@ -35,17 +35,15 @@ public class MainView extends VerticalLayout {
 
     private final TextField filterTextField = new TextField();
 
-    public MainView(NodeRepository nodeRepository, NodeService nodeService, NodeData nodeData) {
+    public MainView(NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
         this.nodeData = nodeData;
 
-        FormLayout settingsFormLayout = new FormLayout();
-
         List<NodeDto> nodeDtoList = nodeService.findAll();
 
-        List<NodeDto> rootNodeDtos = this.nodeData.getRootNodes(nodeDtoList);
+        List<NodeDto> rootNodes = this.nodeData.getRootNodes(nodeDtoList);
 
-        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodeDtos);
+        TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeDtoList, rootNodes);
 
         // Развернуть все ноды
         expandAllNodesListener();
@@ -58,6 +56,22 @@ public class MainView extends VerticalLayout {
 
         // Окно ввода текста для поиска по дереву
         filterByName(dataProvider);
+
+        FormLayout settingsFormLayout = createSettingsFormLayout();
+
+        HorizontalLayout hLayoutTreeAndForm = createTreeAndFormLayout(settingsFormLayout);
+
+        HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
+        hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
+
+        VerticalLayout vLayoutMain = new VerticalLayout();
+        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
+
+        add(vLayoutMain);
+    }
+
+    private FormLayout createSettingsFormLayout() {
+        FormLayout settingsFormLayout = new FormLayout();
 
         // Форма ввода имени
         TextField nameTextField = createTextField(settingsFormLayout);
@@ -76,22 +90,10 @@ public class MainView extends VerticalLayout {
 
         // Слушатель три грида
         nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout);
-
-        // Слушатель кнопки сохранить настройки
-//        saveSettingsButtonListener(nodeService, nameTextField, activeCheckbox, fieldTypeSelect);
-
-        HorizontalLayout hLayoutTreeAndForm = createHorizontalLayout(settingsFormLayout);
-
-        HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
-        hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
-
-        VerticalLayout vLayoutMain = new VerticalLayout();
-        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons);
-
-        add(vLayoutMain);
+        return settingsFormLayout;
     }
 
-    private HorizontalLayout createHorizontalLayout(FormLayout settingsFormLayout) {
+    private HorizontalLayout createTreeAndFormLayout(FormLayout settingsFormLayout) {
         HorizontalLayout hLayoutTreeAndForm = new HorizontalLayout();
         hLayoutTreeAndForm.setWidthFull();
         hLayoutTreeAndForm.add(nodeTreeGrid);
