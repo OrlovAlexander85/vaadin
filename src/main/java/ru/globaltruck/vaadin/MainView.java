@@ -7,11 +7,14 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Route
@@ -89,8 +93,8 @@ public class MainView extends VerticalLayout {
         grid.addDragEndListener(
                 event -> {
                     draggedNode = null;
-                    // Once dragging has ended, disable drop mode so that
-                    // it won't look like other dragged items can be dropped
+                    // После завершения перетаскивания отключите режим перетаскивания, чтобы
+                    // не будет похоже, что другие перетаскиваемые предметы можно уронить
                     grid.setDropMode(null);
                 }
         );
@@ -99,17 +103,20 @@ public class MainView extends VerticalLayout {
                 event -> {
                     Optional<NodeDto> dropOverItem = event.getDropTargetItem();
                     if (dropOverItem.isPresent() && !dropOverItem.get().equals(draggedNode)) {
-                        // reorder dragged item the backing gridItems container
+                        // переупорядочить перетаскиваемый элемент в контейнере backing gridItems
                         seltaNodes.remove(draggedNode);
-                        // calculate drop index based on the dropOverItem
+                        // рассчитать индекс выпадения на основе dropOverItem
                         int dropIndex =
                                 seltaNodes.indexOf(dropOverItem.get()) + (event.getDropLocation() == GridDropLocation.BELOW ? 1 : 0);
                         seltaNodes.add(dropIndex, draggedNode);
                         grid.getDataProvider().refreshAll();
+//                        List<NodeDto> collect = grid.getDataProvider()
+//                                .fetch(new Query<>())
+//                                .collect(Collectors.toList());
+//                        log.info(collect.toString());
                     }
                 }
         );
-
 
         // Общий слой
         VerticalLayout vLayoutMain = new VerticalLayout();
