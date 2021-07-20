@@ -39,8 +39,6 @@ public class MainView extends VerticalLayout {
     public MainView(NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
 
-
-
         TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
 
         List<NodeDto> nodeList = nodeService.findAll();
@@ -95,7 +93,10 @@ public class MainView extends VerticalLayout {
         grid.setSortableColumns();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.setRowsDraggable(true);
+        dragAndDropForGrid();
+    }
 
+    private void dragAndDropForGrid() {
         grid.addDragStartListener(event -> {
             draggedNode = event.getDraggedItems().get(0);
             grid.setDropMode(GridDropMode.BETWEEN);
@@ -162,8 +163,12 @@ public class MainView extends VerticalLayout {
 
         VerticalLayout settingsFormLayout = new VerticalLayout(nameTextField, activeCheckbox, fieldTypeSelect, saveSettingsButton);
 
-        // Слушатель три грида
-        nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout, nodeTreeGrid, saveSettingsButton);
+        final NodeDto[] nodeDtoSelected = new NodeDto[1];
+
+        nodeTreeGridListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout, nodeTreeGrid, nodeDtoSelected);
+
+        saveSettingsButtonListener(nameTextField, activeCheckbox, fieldTypeSelect, saveSettingsButton, nodeDtoSelected);
+
         return settingsFormLayout;
     }
 
@@ -174,54 +179,16 @@ public class MainView extends VerticalLayout {
         return mainContent;
     }
 
-    private void nodeTreeGreedListener(TextField nameTextField,
-                                       Checkbox activeCheckbox,
-                                       Select<FieldType> fieldTypeSelect,
-                                       VerticalLayout settingsFormLayout,
-                                       TreeGrid<NodeDto> nodeTreeGrid,
-                                       Button saveSettingsButton) {
-        var ref = new Object() {
-            NodeDto nodeDtoSelected;
-        };
 
-        nodeTreeGrid.addSelectionListener(selectionEvent -> {
-            // Выбрал ноду
-            selectionEvent.getFirstSelectedItem().ifPresent(nodeDto -> {
-
-                ref.nodeDtoSelected = nodeDto;
-
-                // Является ли листом
-                if (nodeDto.isLeaf()) {
-                    // Включить видимость
-                    settingsFormLayout.setVisible(true);
-
-                    // Если есть
-                    if (nodeDto.getSettings() != null) {
-                        NodeSettingsDto nodeSettingsDto = nodeDto.getSettings();
-                        nameTextField.setValue(nodeSettingsDto.getHumanReadableName());
-                        activeCheckbox.setValue(nodeSettingsDto.isActive());
-                        fieldTypeSelect.setValue(nodeSettingsDto.getType());
-                    }
-                    // Если нету
-                    else {
-                        nameTextField.clear();
-                        activeCheckbox.clear();
-                        fieldTypeSelect.clear();
-                    }
-                } else {
-                    settingsFormLayout.setVisible(false);
-                }
-            });
-        });
-
+    private void saveSettingsButtonListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, Button saveSettingsButton, NodeDto[] nodeDtoSelected) {
         Dialog dialog = new Dialog();
         dialog.add(new Text("Настройки сохранены"));
 
         saveSettingsButton.addClickListener(event -> {
             NodeSettingsDto nodeSettingsDto;
 
-            if (ref.nodeDtoSelected.getSettings() != null) {
-                nodeSettingsDto = ref.nodeDtoSelected.getSettings();
+            if (nodeDtoSelected[0].getSettings() != null) {
+                nodeSettingsDto = nodeDtoSelected[0].getSettings();
             } else {
                 nodeSettingsDto = new NodeSettingsDto();
                 nodeSettingsDto.setId(UUID.randomUUID());
@@ -230,11 +197,44 @@ public class MainView extends VerticalLayout {
             nodeSettingsDto.setType(fieldTypeSelect.getValue());
             nodeSettingsDto.setHumanReadableName(nameTextField.getValue());
             nodeSettingsDto.setActive(activeCheckbox.getValue());
-            ref.nodeDtoSelected.setSettings(nodeSettingsDto);
-            nodeService.save(ref.nodeDtoSelected);
-            log.info("Saved: " + ref.nodeDtoSelected);
+            nodeDtoSelected[0].setSettings(nodeSettingsDto);
+            nodeService.save(nodeDtoSelected[0]);
+            log.info("Saved: " + nodeDtoSelected[0]);
             dialog.open();
             initializeGrid(nodeService);
+        });
+    }
+
+    private void nodeTreeGridListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, VerticalLayout settingsFormLayout, TreeGrid<NodeDto> nodeTreeGrid, NodeDto[] nodeDtoSelected) {
+        nodeTreeGrid.addSelectionListener(selectionEvent -> {
+            // Выбрал ноду
+            selectionEvent.getFirstSelectedItem().ifPresent(nodeDto -> {
+
+                nodeDtoSelected[0] = nodeDto;
+
+                // Является ли листом
+                if (nodeDto.isLeaf()) {
+                    // Включить видимость
+                    settingsFormLayout.setVisible(true);
+
+                    // Если есть настройки, то заполняем поля
+                    if (nodeDto.getSettings() != null) {
+                        NodeSettingsDto nodeSettingsDto = nodeDto.getSettings();
+                        nameTextField.setValue(nodeSettingsDto.getHumanReadableName());
+                        activeCheckbox.setValue(nodeSettingsDto.isActive());
+                        fieldTypeSelect.setValue(nodeSettingsDto.getType());
+                    }
+                    // Если нету опустошаем поля
+                    else {
+                        nameTextField.clear();
+                        activeCheckbox.clear();
+                        fieldTypeSelect.clear();
+                    }
+                } else {
+                    // Выключить видимость
+                    settingsFormLayout.setVisible(false);
+                }
+            });
         });
     }
 
