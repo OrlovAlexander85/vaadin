@@ -21,6 +21,6 @@ public class NodeController {
 
     @GetMapping(value = "all")
     public List<NodeDto> findActiveNodes(){
-        return nodeService.findActiveNodes("selta", true);
+        return nodeService.findActiveNodes("atrucks", true);
     }
 }

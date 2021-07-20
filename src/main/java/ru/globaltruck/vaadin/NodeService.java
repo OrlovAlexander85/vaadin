@@ -21,11 +21,11 @@ public class NodeService {
 
     @SneakyThrows
     void save(){
-//        Reader xmlSourceAtr = new FileReader("src/main/resources/Atrucks.xml");
-        Reader xmlSourceSel = new FileReader("src/main/resources/Selta.xml");
-        String source = "selta";
+        Reader xmlSourceAtr = new FileReader("src/main/resources/Atrucks.xml");
+//        Reader xmlSourceSel = new FileReader("src/main/resources/Selta.xml");
+        String source = "atrucks";
 //        JSONObject objectAtr = XML.toJSONObject(xmlSourceAtr);
-        JSONObject objectSel = XML.toJSONObject(xmlSourceSel);
+        JSONObject objectSel = XML.toJSONObject(xmlSourceAtr);
         List<NodeDto> nodeDtos = nodeData.createNodeList(objectSel, source);
         List<NodeEntity> nodeEntities = nodeDtos.stream()
                 .map(nodeMapper::mapToEntity)

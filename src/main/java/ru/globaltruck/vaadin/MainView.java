@@ -30,8 +30,6 @@ import java.util.stream.Stream;
 public class MainView extends VerticalLayout {
     private final NodeService nodeService;
 
-    private final TextField filterTextField = new TextField();
-
     private NodeDto draggedNode;
     private List<NodeDto> seltaNodes;
     private Grid<NodeDto> grid;
@@ -41,11 +39,13 @@ public class MainView extends VerticalLayout {
 
         TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
 
+
         List<NodeDto> nodeList = nodeService.findAll();
 
         List<NodeDto> rootNodes = nodeData.getRootNodes(nodeList);
 
         TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeList, rootNodes, nodeTreeGrid);
+        TextField filterTextField = filterByName(dataProvider);
 
         Button openGridButton = new Button("Развернуть все");
         Button closeGridButton = new Button("Свернуть все");
@@ -61,7 +61,7 @@ public class MainView extends VerticalLayout {
         expandSelectedNodeListener(nodeTreeGrid, expandSelectedButton);
 
         // Окно ввода текста для поиска по дереву
-        filterByName(dataProvider);
+
 
         // Слой настроек
         VerticalLayout settingsFormLayout = createSettingsFormLayout(nodeTreeGrid);
@@ -145,7 +145,7 @@ public class MainView extends VerticalLayout {
     }
 
     private void initializeGrid(NodeService nodeService) {
-        seltaNodes = nodeService.findActiveNodes("selta", true);
+        seltaNodes = nodeService.findActiveNodes("atrucks", true);
         grid.setItems(seltaNodes);
     }
 
@@ -252,10 +252,12 @@ public class MainView extends VerticalLayout {
         return nameTextField;
     }
 
-    private void filterByName(TreeDataProvider<NodeDto> dataProvider) {
+    private TextField filterByName(TreeDataProvider<NodeDto> dataProvider) {
+        TextField filterTextField = new TextField();
         filterTextField.setPlaceholder("Фильтр по названию");
         filterTextField.setValueChangeMode(ValueChangeMode.EAGER);
         filterTextField.addValueChangeListener(field -> filterDataProvider(field.getValue(), dataProvider));
+        return filterTextField;
     }
 
     private TreeDataProvider<NodeDto> getNodeDtoTreeDataProvider(NodeData nodeData, List<NodeDto> nodeDtoList,
