@@ -23,4 +23,5 @@ public class NodeEntity {
     private boolean isLeaf;
     private String source;
     private String example;
+    private int index;
 }

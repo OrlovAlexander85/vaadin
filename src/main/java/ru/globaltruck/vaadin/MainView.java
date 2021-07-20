@@ -7,14 +7,11 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
-import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
@@ -26,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Route
@@ -34,18 +30,16 @@ import java.util.stream.Stream;
 public class MainView extends VerticalLayout {
     private final NodeService nodeService;
 
-    private final Button openGridButton = new Button("Развернуть все");
-    private final Button closeGridButton = new Button("Свернуть все");
-    private final Button expandSelectedButton = new Button("Развернуть выбранную");
-    private final Button saveSettingsButton = new Button("Сохранить");
-
     private final TextField filterTextField = new TextField();
 
     private NodeDto draggedNode;
     private List<NodeDto> seltaNodes;
+    private Grid<NodeDto> grid;
 
     public MainView(NodeService nodeService, NodeData nodeData) {
         this.nodeService = nodeService;
+
+
 
         TreeGrid<NodeDto> nodeTreeGrid = new TreeGrid<>();
 
@@ -55,14 +49,18 @@ public class MainView extends VerticalLayout {
 
         TreeDataProvider<NodeDto> dataProvider = getNodeDtoTreeDataProvider(nodeData, nodeList, rootNodes, nodeTreeGrid);
 
+        Button openGridButton = new Button("Развернуть все");
+        Button closeGridButton = new Button("Свернуть все");
+        Button expandSelectedButton = new Button("Развернуть выбранную");
+
         // Развернуть все ноды
-        expandAllNodesListener(nodeTreeGrid);
+        expandAllNodesListener(nodeTreeGrid, openGridButton);
 
         // Свернуть все ноды
-        rollUpAllNodesListener(nodeTreeGrid);
+        rollUpAllNodesListener(nodeTreeGrid, closeGridButton);
 
         // Развернуть выбранную ноду
-        expandSelectedNodeListener(nodeTreeGrid);
+        expandSelectedNodeListener(nodeTreeGrid, expandSelectedButton);
 
         // Окно ввода текста для поиска по дереву
         filterByName(dataProvider);
@@ -77,9 +75,22 @@ public class MainView extends VerticalLayout {
         HorizontalLayout hLayoutWithButtons = new HorizontalLayout();
         hLayoutWithButtons.add(openGridButton, closeGridButton, expandSelectedButton);
 
-        Grid<NodeDto> grid = new Grid<>(NodeDto.class);
-        seltaNodes = nodeService.findActiveNodes("selta", true);
-        grid.setItems(seltaNodes);
+        // Создание таблицы включенных полей
+        createGrid(nodeService);
+
+        // Кнопка для сохранения порядка настроек
+        Button saveOptionsList = getSaveOptionsOrderButton(nodeService);
+
+        // Общий слой
+        VerticalLayout vLayoutMain = new VerticalLayout();
+        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons, grid, saveOptionsList);
+
+        add(vLayoutMain);
+    }
+
+    private void createGrid(NodeService nodeService) {
+        grid = new Grid<>(NodeDto.class);
+        initializeGrid(nodeService);
         grid.setColumns("name", "example");
         grid.setSortableColumns();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -109,20 +120,32 @@ public class MainView extends VerticalLayout {
                         int dropIndex =
                                 seltaNodes.indexOf(dropOverItem.get()) + (event.getDropLocation() == GridDropLocation.BELOW ? 1 : 0);
                         seltaNodes.add(dropIndex, draggedNode);
+
                         grid.getDataProvider().refreshAll();
-//                        List<NodeDto> collect = grid.getDataProvider()
-//                                .fetch(new Query<>())
-//                                .collect(Collectors.toList());
-//                        log.info(collect.toString());
                     }
                 }
         );
+    }
 
-        // Общий слой
-        VerticalLayout vLayoutMain = new VerticalLayout();
-        vLayoutMain.add(filterTextField, hLayoutTreeAndForm, hLayoutWithButtons, grid);
+    private Button getSaveOptionsOrderButton(NodeService nodeService) {
+        Button saveOptionsList = new Button("Сохранить порядок");
+        Dialog dialog = new Dialog();
+        dialog.add(new Text("Порядок сохранён"));
+        saveOptionsList.addClickListener(event -> {
+            for (int i = 0; i < seltaNodes.size(); i++) {
+                NodeDto nodeDto = seltaNodes.get(i);
+                nodeDto.setIndex(i);
+            }
+            nodeService.saveAll(seltaNodes);
+            dialog.open();
+        });
 
-        add(vLayoutMain);
+        return saveOptionsList;
+    }
+
+    private void initializeGrid(NodeService nodeService) {
+        seltaNodes = nodeService.findActiveNodes("selta", true);
+        grid.setItems(seltaNodes);
     }
 
     private VerticalLayout createSettingsFormLayout(TreeGrid<NodeDto> nodeTreeGrid) {
@@ -135,10 +158,12 @@ public class MainView extends VerticalLayout {
         // Выпадушка: тип поля
         Select<FieldType> fieldTypeSelect = createFieldTypeSelect();
 
+        Button saveSettingsButton = new Button("Сохранить");
+
         VerticalLayout settingsFormLayout = new VerticalLayout(nameTextField, activeCheckbox, fieldTypeSelect, saveSettingsButton);
 
         // Слушатель три грида
-        nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout, nodeTreeGrid);
+        nodeTreeGreedListener(nameTextField, activeCheckbox, fieldTypeSelect, settingsFormLayout, nodeTreeGrid, saveSettingsButton);
         return settingsFormLayout;
     }
 
@@ -149,7 +174,12 @@ public class MainView extends VerticalLayout {
         return mainContent;
     }
 
-    private void nodeTreeGreedListener(TextField nameTextField, Checkbox activeCheckbox, Select<FieldType> fieldTypeSelect, VerticalLayout settingsFormLayout, TreeGrid<NodeDto> nodeTreeGrid) {
+    private void nodeTreeGreedListener(TextField nameTextField,
+                                       Checkbox activeCheckbox,
+                                       Select<FieldType> fieldTypeSelect,
+                                       VerticalLayout settingsFormLayout,
+                                       TreeGrid<NodeDto> nodeTreeGrid,
+                                       Button saveSettingsButton) {
         var ref = new Object() {
             NodeDto nodeDtoSelected;
         };
@@ -204,6 +234,7 @@ public class MainView extends VerticalLayout {
             nodeService.save(ref.nodeDtoSelected);
             log.info("Saved: " + ref.nodeDtoSelected);
             dialog.open();
+            initializeGrid(nodeService);
         });
     }
 
@@ -241,7 +272,7 @@ public class MainView extends VerticalLayout {
         return dataProvider;
     }
 
-    private void expandAllNodesListener(TreeGrid<NodeDto> nodeTreeGrid) {
+    private void expandAllNodesListener(TreeGrid<NodeDto> nodeTreeGrid, Button openGridButton) {
         openGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                     .getDataProvider()
@@ -250,7 +281,7 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private void rollUpAllNodesListener(TreeGrid<NodeDto> nodeTreeGrid) {
+    private void rollUpAllNodesListener(TreeGrid<NodeDto> nodeTreeGrid, Button closeGridButton) {
         closeGridButton.addClickListener(event -> {
             final Stream<NodeDto> rootNodes2 = nodeTreeGrid
                     .getDataProvider()
@@ -259,7 +290,7 @@ public class MainView extends VerticalLayout {
         });
     }
 
-    private void expandSelectedNodeListener(TreeGrid<NodeDto> nodeTreeGrid) {
+    private void expandSelectedNodeListener(TreeGrid<NodeDto> nodeTreeGrid, Button expandSelectedButton) {
         List<NodeDto> nodeDtoSelected = new ArrayList<>();
         nodeTreeGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         nodeTreeGrid.addSelectionListener(selectionEvent -> {

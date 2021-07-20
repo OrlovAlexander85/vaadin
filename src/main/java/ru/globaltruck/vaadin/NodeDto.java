@@ -1,6 +1,8 @@
 package ru.globaltruck.vaadin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -8,11 +10,14 @@ import java.util.UUID;
 public class NodeDto {
     private UUID uuid;
     private String name;
+    @JsonIgnore
     private NodeDto parent;
     private NodeSettingsDto settings;
+    @JsonIgnore
     private boolean isLeaf;
     private String source;
     private String example;
+    private int index;
 
     public NodeDto() {
     }

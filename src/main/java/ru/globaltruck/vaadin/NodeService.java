@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +43,19 @@ public class NodeService {
         return nodeRepository.findAllBySourceAndSettings_Active(source, active)
                 .stream()
                 .map(nodeMapper::mapToDto)
+                .sorted(Comparator.comparing(NodeDto::getIndex))
                 .collect(Collectors.toList());
     }
 
     public void save(NodeDto nodeDto) {
         NodeEntity nodeEntity = nodeMapper.mapToEntity(nodeDto);
         nodeRepository.save(nodeEntity);
+    }
+
+    public void saveAll(List<NodeDto> nodes) {
+        nodeRepository.saveAll(nodes
+                .stream()
+                .map(nodeMapper::mapToEntity)
+                .collect(Collectors.toList()));
     }
 }
